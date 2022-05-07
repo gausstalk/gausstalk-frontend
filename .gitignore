@@ -1,0 +1,6 @@
+node_modules/
+build/
+
+
+# Ignore DevSpace cache and log folder
+.devspace/
