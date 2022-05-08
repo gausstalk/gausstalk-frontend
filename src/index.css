@@ -25,14 +25,15 @@ body {
 
 .chat-area {
   width: 100%;
+  border: 0.1em solid black;
 }
 
 .chat-input {
-  width: 85%;
+  width: 75%;
   height: 3em;
 }
 
 .send-button {
-  width: 15%;
+  width: 25%;
   height: 3em;
 }

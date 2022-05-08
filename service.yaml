@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: gausstalk-frontend
+spec:
+  selector:
+    app.kubernetes.io/component: gausstalk-frontend
+  ports:
+    - name: frontend-port
+      protocol: TCP
+      port: 80
+      targetPort: 80
