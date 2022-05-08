@@ -19,7 +19,7 @@ deployments:
       - image: ${IMAGE} # Use the value of our `${IMAGE}` variable here (see vars above)
       service:
         ports:
-        - port: 3000
+        - port: 80
 
 # `dev` only applies when you run `devspace dev`
 dev:

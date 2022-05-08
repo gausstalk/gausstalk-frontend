@@ -2,154 +2,52 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-function Square(props) {
-  return (
-    <button className="square" onClick={props.onClick}>
-      {props.value}
-    </button>
-  );
-}
 
-class Board extends React.Component {
-  renderSquare(i) {
-    return (
-      <Square
-        value={this.props.squares[i]}
-        onClick={() => this.props.onClick(i)}
-      />
-    );
-  }
-
-  render() {
-    return (
-      <div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
-      </div>
-    );
-  }
-}
-
-class Game extends React.Component {
-  handleClick(i) {
-    const history = this.state.history.slice(0, this.state.stepNumber + 1);
-    const current = history[history.length - 1];
-    const squares = current.squares.slice();
-    if(calculateWinner(squares) || squares[i]) return;
-    squares[i] = this.state.xIsNext ? 'X' : 'O';
-
-    this.setState({
-      history: history.concat([{
-        squares: squares,
-      }]),
-      stepNumber: history.length,
-      xIsNext: !this.state.xIsNext,
-    });
-  }
-
-  jumpTo(step) {
-    this.setState({
-      stepNumber: step,
-      xIsNext: (step % 2) === 0,
-    });
-  }
+class Chat extends React.Component {
+  ws;
 
   constructor(props) {
     super(props);
-    this.state = {
-      history: [{
-        squares: Array(9).fill(null),
-      }],
-      stepNumber: 0,
-      xIsNext: true,
+    this.ws = new WebSocket("ws://20.196.232.209/api/ws");
+    this.ws.onopen = () => {
+      console.log('conencted!!');
+    };
+    this.ws.onmessage = function(event) {
+      var chatArea = document.getElementById('chat-area-ul');
+      var message = document.createElement('li');
+      var content = document.createTextNode(event.data);
+      message.appendChild(content);
+      chatArea.appendChild(message);
     };
   }
 
-  componentDidMount() {
-    fetch('api/v1/messages/',
-      {'Content-Type': 'application/json',
-       "Access-Control-Allow-Origin": "*"})
-      .then(response => response.json())
-      .then(data => this.setState({hello: data["messages"][0]}))
-  }
+  sendMessage = (event) => {
+    var input = document.getElementById("chat-input");
+    this.ws.send(input.value);
+    input.value = '';
+    event.preventDefault();
+  };
 
   render() {
-    const history = this.state.history;
-    const current = history[this.state.stepNumber];
-    const winner = calculateWinner(current.squares);
-
-    const moves = history.map((step, move) => {
-      const desc = move ?
-        'Go to move #' + move :
-        'Go to game start';
-      return (
-        <li key={move}>
-          <button onClick={() => this.jumpTo(move)}>{desc}</button>
-        </li>
-      );
-    });
-
-    let status;
-    if(winner) {
-      status = 'Winner: ' + winner;
-    } else {
-      status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
-    }
-
     return (
-      <div className="game">
-        <p>{this.state.hello}</p>
-        <div className="game-board">
-          <Board
-            squares={current.squares}
-            onClick={(i) => this.handleClick(i)}
-          />
+      <div className='chat-frame'>
+        <div className='chat-area'>
+          <ul id='chat-area-ul'>
+            <li>안녕</li>
+            <li>만나서 반가워</li>
+          </ul>
         </div>
-        <div className="game-info">
-          <div>{status}</div>
-          <ol>{moves}</ol>
-        </div>
+        <form action='' onSubmit={this.sendMessage}>
+          <input className='chat-input' id='chat-input' type='text'/>
+          <button className='send-button'>Send</button>
+        </form>
       </div>
     );
   }
 }
 
-function calculateWinner(squares) {
-  const lines = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6],
-  ];
-  for (let i = 0; i < lines.length; i++) {
-    const [a, b, c] = lines[i];
-    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
-    }
-  }
-  return null;
-}
-
-// ========================================
 
 ReactDOM.render(
-  <Game />,
+  <Chat />,
   document.getElementById('root')
 );
