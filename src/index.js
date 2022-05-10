@@ -8,7 +8,7 @@ class Chat extends React.Component {
 
   constructor(props) {
     super(props);
-    this.ws = new WebSocket("ws://20.196.232.209/api/ws");
+    this.ws = new WebSocket("wss://talk.gausslabs.ai/api/ws");
     this.ws.onopen = () => {
       console.log('conencted!!');
     };
