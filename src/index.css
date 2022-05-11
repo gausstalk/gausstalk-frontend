@@ -13,20 +13,46 @@ body {
 #root {
   width: 100%;
   height: 100%;
-  padding: 2em;
 }
 
 .chat-frame {
-  padding: 2em;
+  padding: 1em;
   width: 100%;
   height: 100%;
   border: 0.1em solid black;
 }
 
 .chat-area {
-  width: 100%;
-  border: 0.1em solid black;
+  background-color: #fff;
+  border: 1px solid #e5e5ea;
+  border-radius: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  font-family: "SanFrancisco";
+  font-size: 1.25rem;
+  margin: 0 auto 1rem;
+  padding: 0.5rem 1.5rem;
+  height: 80vh;
+  overflow: auto
 }
+
+.chat-area p::before,
+.chat-area p::after {
+  bottom: -0.1rem;
+  content: "";
+  height: 1rem;
+  position: absolute;
+}
+
+.chat-area p {
+  border-radius: 1.15rem;
+  line-height: 1.25;
+  max-width: 75%;
+  padding: 0.5rem .875rem;
+  position: relative;
+  word-wrap: break-word;
+}
+
 
 .chat-input {
   width: 75%;
@@ -36,4 +62,21 @@ body {
 .send-button {
   width: 25%;
   height: 3em;
+}
+
+p.chat-bubble-other {
+  align-items: flex-start;
+  background-color: #e5e5ea;
+  color: #000;
+}
+
+p[class^="chat-bubble-"] {
+  margin: 0.5rem 0;
+  width: fit-content;
+}
+
+p.chat-bubble-me {
+  align-self: flex-end;
+  background-color: #248bf5;
+  color: #fff;
 }
