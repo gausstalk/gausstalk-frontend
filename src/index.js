@@ -37,7 +37,7 @@ class Chat extends React.Component {
   };
 
   onCheckEnter = (e) => {
-    if(e.key == 'Enter') {
+    if(e.key === 'Enter') {
       this.sendMessage(e);
     }
   }
