@@ -16,9 +16,9 @@ class Chat extends React.Component {
       console.log('connected!!');
     };
     this.ws.onmessage = function(event) {
-      var chatArea = document.getElementById('chat-area');
-      var message = document.createElement('p');
-      var content = document.createTextNode(event.data);
+      let chatArea = document.getElementById('chat-area');
+      let message = document.createElement('p');
+      let content = document.createTextNode(event.data);
       message.appendChild(content);
       message.classList.add('chat-bubble-me')
       chatArea.appendChild(message);
@@ -26,7 +26,7 @@ class Chat extends React.Component {
   }
 
   sendMessage = (event) => {
-    var input = document.getElementById("chat-input");
+    let input = document.getElementById("chat-input");
     if(input.value) {
       this.ws.send(input.value);
     }

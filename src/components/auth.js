@@ -13,7 +13,7 @@ const Auth = () => {
     session_state: sessionState,
   })
   .then(function (response) {
-    var loginMessage = document.getElementById('login-message');
+    let loginMessage = document.getElementById('login-message');
     loginMessage.innerHTML = response.data;
   }).catch(function (error) {
     // error handling
