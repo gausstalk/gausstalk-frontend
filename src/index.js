@@ -7,19 +7,25 @@ import {
  } from 'react-router-dom';
 import Chat from './components/chat.js'
 import Auth from './components/auth.js'
-
+import Logout from './components/logout.js'
+import { TokenProvider } from './components/token-context.tsx';
 import 'bootstrap/dist/css/bootstrap.css'
 import './assets/styles/index.css';
 
 
-const Root = () => (
-  <Router>
-    <Routes>
-      <Route exact path="/chat" element={<Chat />} />
-      <Route exact path="/auth" element={<Auth />} />
-    </Routes>
-  </Router>
-);
+const Root = () => {
+  return (
+    <Router>
+      <TokenProvider>
+        <Routes>
+            <Route exact path="/chat" element={<Chat />} />
+            <Route exact path="/auth" element={<Auth />} />
+            <Route exact path="/logout" element={<Logout />} />
+        </Routes>
+      </TokenProvider>
+    </Router>
+  );
+};
 
 
 ReactDOM.render(

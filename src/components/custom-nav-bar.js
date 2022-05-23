@@ -1,15 +1,35 @@
 import React from 'react';
 import {Container, Nav, Navbar, NavDropdown} from 'react-bootstrap';
 
+import { TokenContext } from './token-context.tsx';
 import logo192 from '../assets/images/logo192.png';
 
 
 class CustomNavbar extends React.Component {
+  static contextType = TokenContext;
+
   constructor(props) {
     super(props);
   }
 
+  loginLogoutLink(props) {
+    let token = props.token;
+    if(token === null) {
+      return (
+        <Nav.Link href='https://login.microsoftonline.com/cfcd9b87-7c5a-4042-9129-abee6253febe/oauth2/v2.0/authorize?client_id=7fc37514-c400-4b28-a6d6-e19a9ae981b6&response_type=code&redirect_uri=http://localhost:3000/auth&scope=User.read'>
+          Login
+        </Nav.Link>
+      );
+    } else {
+      return (
+        <Nav.Link href='/logout'>Logout</Nav.Link>
+      );
+    }
+  }
+
   render() {
+    const { token } = this.context;
+
     return (
       <>
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" sticky={"top"}>
@@ -42,9 +62,7 @@ class CustomNavbar extends React.Component {
                 <Nav.Link eventKey={2} href="#memes">
                   Dank memes
                 </Nav.Link>
-                <Nav.Link href='https://login.microsoftonline.com/cfcd9b87-7c5a-4042-9129-abee6253febe/oauth2/v2.0/authorize?client_id=7fc37514-c400-4b28-a6d6-e19a9ae981b6&response_type=code&redirect_uri=http://localhost:3000/auth&scope=User.read'>
-                  Login
-                </Nav.Link>
+                <this.loginLogoutLink token={token} />
               </Nav>
             </Navbar.Collapse>
           </Container>
