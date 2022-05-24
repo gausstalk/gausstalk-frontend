@@ -16,7 +16,7 @@ class Start extends React.Component {
         return (
             <>
                 <CustomNavbar />
-                <header className={"header-wrapper"}>
+                <header className={"header-wrapper"} id={"about"}>
                     <div className={"header-solid"}>
                         <div className={"header-content content"}>
                             <div className={"header-copy"}>
@@ -25,7 +25,7 @@ class Start extends React.Component {
                                     A platform where Gaussians can communicate, discuss, and share their different ideas and improve company culture
                                 </p>
                                 <div className={"btn-group text-center"}>
-                                    <Button href="/demo" target="_self" variant={"contained"}>
+                                    <Button href="https://login.microsoftonline.com/cfcd9b87-7c5a-4042-9129-abee6253febe/oauth2/v2.0/authorize?client_id=7fc37514-c400-4b28-a6d6-e19a9ae981b6&response_type=code&redirect_uri=http://localhost:3000/auth&scope=User.read" target="_self" variant={"contained"}>
                                             JOIN&nbsp;NOW
                                     </Button>
                                 </div>
@@ -36,7 +36,7 @@ class Start extends React.Component {
                         </div>
                     </div>
                 </header>
-                <section className={"section"}>
+                <section className={"section"} id={"features"}>
                     <div className={"section-solid"}>
                         <div className={"section-content content"}>
                             <div className={"section-copy"}>
@@ -80,9 +80,7 @@ class Start extends React.Component {
                         </div>
                     </div>
                 </section>
-                <CustomBottomNavbar>
-
-                </CustomBottomNavbar>
+                <CustomBottomNavbar/>
             </>
         );
     }

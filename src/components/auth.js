@@ -12,7 +12,7 @@ const Auth = () => {
   const navigate = useNavigate();
 
   if(token === null) {
-    // axios.post('http://localhost:8000/apps/user/v1/auth/', {
+    //axios.post('http://localhost:8000/apps/user/v1/auth/', {
     axios.post('https://talk.gausslabs.ai/api/apps/user/v1/auth/', {
       code: code,
       session_state: sessionState,

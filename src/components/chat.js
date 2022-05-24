@@ -13,7 +13,7 @@ class Chat extends React.Component {
   constructor(props) {
     super(props);
 
-    // this.ws = new WebSocket("ws://localhost:8000/apps/chat/v1/ws/");
+    //this.ws = new WebSocket("ws://localhost:8000/apps/chat/v1/ws/");
     this.ws = new WebSocket("wss://talk.gausslabs.ai/api/apps/chat/v1/ws/");
     this.ws.onopen = () => {
       console.log('connected!!');
