@@ -1,0 +1,156 @@
+section {
+    width: 100vw;
+    height: 800px;
+}
+
+.sign-up-section .container {
+    position: relative;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+section .container {
+    display: inline-flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: stretch;
+    justify-content: space-evenly;
+    width: 100vw;
+}
+
+.container-left {
+    position: absolute;
+    align-items: flex-start;
+    text-align: left;
+    width: 100vw;
+}
+
+.container-right {
+    position: absolute;
+    align-items: flex-end;
+    text-align: right;
+    width: 100vw;
+}
+
+.key-text {
+    font-size: 64px;
+    word-spacing: -10px;
+}
+
+.feature-text {
+    font-size: 48px;
+}
+
+.explain-text {
+    font-size: 32px;
+    max-width: 50%;
+}
+
+#join1 {
+    left: 5%;
+}
+
+#feature1 {
+    top: 1150px;
+    left: 5%;
+}
+
+#feature2 {
+    top: 1950px;
+    right: 5%;
+}
+
+.start-image {
+    width: 50%;
+    height: auto;
+    position: absolute;
+    z-index: -1;
+    right: 10px;
+    top: 56px;
+    bottom:0;
+    margin: auto;
+}
+
+.start-image2 {
+    width: 50%;
+    height: auto;
+    position: absolute;
+    z-index: -1;
+    right: 5%;
+    top: 1056px;
+    bottom:0;
+}
+
+.start-image3 {
+    width: 50%;
+    height: auto;
+    position: absolute;
+    z-index: -1;
+    left: 5%;
+    top: 1756px;
+}
+
+.section-common {
+    width : 100%;
+    height : 100%;
+    display:flex;
+    justify-content : center;
+    align-items:center;
+    font-size:36px;
+}
+
+.section-area1 {
+    background-color : red;
+}
+.section-area2 {
+    background-color : blue;
+}
+.section-area3 {
+    background-color : pink;
+}
+
+
+.slide-navigation button:nth-child(1) {
+    display: none;
+}
+
+.slide-navigation button:nth-last-child(1) {
+    display: none;
+}
+
+.slide-navigation button {
+    background-color: white;
+    border-radius: 10px;
+    border: 1px solid black;
+    width: 5px;
+    height: 15px;
+    margin: 0 5px;
+    font-size: 0px;
+    cursor: pointer;
+}
+
+.slide-navigation {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    bottom: 0px;
+}
+
+.slide-navigation button:disabled {
+    background-color: black;
+    border: 1px solid white;
+}
+
+@media only screen and (max-width: 700px) {
+    .start-image, .start-image2, .start-image3 {
+        display: none;
+    }
+    .explain-text {
+        max-width: 100%;
+    }
+}
+
+
