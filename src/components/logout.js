@@ -1,12 +1,14 @@
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { TokenContext } from './token-context.tsx';
 
 
 const Logout = () => {
+  const { setToken } = useContext(TokenContext);
   const navigate = useNavigate();
 
-  // expire gauss_access_token and gauss_refresh_token on the server
+  // delete gauss_refresh_token from cookie
   //axios.delete('http://localhost:8000/apps/user/v1/auth/', {
   axios.delete('https://talk.gausslabs.ai/api/apps/user/v1/auth/', {
     withCredentials: true,
@@ -18,6 +20,7 @@ const Logout = () => {
 
   useEffect(() => {
     navigate('/');
+    setToken(null);
   });
 
   return (

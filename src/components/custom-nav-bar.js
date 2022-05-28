@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import {Container, Nav, Navbar} from 'react-bootstrap';
 
 import logo192 from '../assets/images/logo192.png';
@@ -44,7 +45,7 @@ class CustomNavbar extends React.Component {
       );
     } else {
       return (
-        <Nav.Link href='/logout'>Logout</Nav.Link>
+        <Nav.Link as={Link} to='/logout'>Logout</Nav.Link>
       );
     }
   }
