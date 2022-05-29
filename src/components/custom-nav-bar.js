@@ -1,6 +1,7 @@
 import React from 'react';
 import {Container, Nav, Navbar} from 'react-bootstrap';
 import axios from 'axios';
+import urlJoin from 'url-join';
 
 import logo192 from '../assets/images/logo192.png';
 import {TokenContext} from "./token-context.tsx";
@@ -58,9 +59,10 @@ class CustomNavbar extends React.Component {
       });
     }
 
+    let redirectUrl = urlJoin(process.env.REACT_APP_FRONTEND_BASE_URL, 'auth');
+    let loginUrl = `https://login.microsoftonline.com/cfcd9b87-7c5a-4042-9129-abee6253febe/oauth2/v2.0/authorize?client_id=7fc37514-c400-4b28-a6d6-e19a9ae981b6&response_type=code&redirect_uri=${redirectUrl}&scope=User.read`;
     return (
-      // <Nav.Link id='login-logout-link' href='https://login.microsoftonline.com/cfcd9b87-7c5a-4042-9129-abee6253febe/oauth2/v2.0/authorize?client_id=7fc37514-c400-4b28-a6d6-e19a9ae981b6&response_type=code&redirect_uri=http://localhost:3000/auth&scope=User.read'>
-      <Nav.Link id='login-logout-link' href='https://login.microsoftonline.com/cfcd9b87-7c5a-4042-9129-abee6253febe/oauth2/v2.0/authorize?client_id=7fc37514-c400-4b28-a6d6-e19a9ae981b6&response_type=code&redirect_uri=http://talk.gausslabs.ai/home/auth&scope=User.read'>
+      <Nav.Link id='login-logout-link' href={loginUrl}>
         Login
       </Nav.Link>
     );

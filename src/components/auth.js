@@ -1,6 +1,8 @@
 import { useContext } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import urlJoin from 'url-join';
+
 import { TokenContext } from './token-context.tsx';
 
 
@@ -12,8 +14,8 @@ const Auth = () => {
   const navigate = useNavigate();
 
   if(token === null) {
-    //axios.post('http://localhost:8000/apps/user/v1/auth/', {
-    axios.post('https://talk.gausslabs.ai/api/apps/user/v1/auth/', {
+    const authUrl = urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/user/v1/auth/');
+    axios.post(authUrl, {
       code: code,
       session_state: sessionState,
     }, {
