@@ -6,12 +6,13 @@ import { TokenContext } from './token-context.tsx';
 
 
 const Logout = () => {
-  const { setToken } = useContext(TokenContext);
+  const { token, setToken } = useContext(TokenContext);
   const navigate = useNavigate();
 
   // delete gauss_refresh_token from cookie
   const authUrl = urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/user/v1/auth/');
   axios.delete(authUrl, {
+    headers: { Authorization: `Bearer ${token}` },
     withCredentials: true,
   }).then(function (response) {
     console.log('Logout succeeded!!');
@@ -20,8 +21,8 @@ const Logout = () => {
   });
 
   useEffect(() => {
-    navigate('/');
     setToken(null);
+    navigate('/');
   });
 
   return (
