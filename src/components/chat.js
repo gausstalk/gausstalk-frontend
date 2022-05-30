@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from 'react-bootstrap/Button';
 import { FormControl, InputGroup } from 'react-bootstrap';
+import urlJoin from 'url-join';
 
 import { TokenContext } from './token-context.tsx';
 import CustomNavbar from './custom-nav-bar.js';
@@ -13,8 +14,8 @@ class Chat extends React.Component {
   constructor(props) {
     super(props);
 
-    // this.ws = new WebSocket("ws://localhost:8000/apps/chat/v1/ws/");
-    this.ws = new WebSocket("wss://talk.gausslabs.ai/api/apps/chat/v1/ws/");
+    const websocketUrl = urlJoin(process.env.REACT_APP_WEBSOCKET_BASE_URL, 'apps/chat/v1/ws/');
+    this.ws = new WebSocket(websocketUrl);
     this.ws.onopen = () => {
       console.log('connected!!');
     };
@@ -23,7 +24,7 @@ class Chat extends React.Component {
       let message = document.createElement('p');
       let content = document.createTextNode(event.data);
       message.appendChild(content);
-      message.classList.add('chat-bubble-me')
+      message.classList.add('chat-bubble-me');
       chatArea.appendChild(message);
     };
   }
