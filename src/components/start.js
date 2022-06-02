@@ -31,7 +31,7 @@ class Start extends React.Component {
                                 </div>
                             </div>
                             <div className={"header-img-wrapper"}>
-                                <img className={"header-img"} src={start_img_1}></img>
+                                <img className={"header-img"} src={start_img_1} alt={"Start 1"}></img>
                             </div>
                         </div>
                     </div>
@@ -46,7 +46,7 @@ class Start extends React.Component {
                                 </p>
                             </div>
                             <div className={"section-img-wrapper"}>
-                                <img className={"section-img"} src={company_chat}></img>
+                                <img className={"section-img"} src={company_chat} alt={"Company Chat"}></img>
                             </div>
                         </div>
                     </div>
@@ -55,7 +55,7 @@ class Start extends React.Component {
                     <div className={"section-solid"}>
                         <div className={"section-content content"}>
                             <div className={"section-img-wrapper"}>
-                                <img className={"section-img"} src={lunch_together}></img>
+                                <img className={"section-img"} src={lunch_together} alt={"Lunch Together"}></img>
                             </div>
                             <div className={"section-copy"}>
                                 <h1 className={"section-h1"}>Lunch Together</h1>
@@ -75,7 +75,7 @@ class Start extends React.Component {
                                     Want to meet new coworkers? Just register for random 1 : 1s and we will directly match you!                                </p>
                             </div>
                             <div className={"section-img-wrapper"}>
-                                <img className={"section-img"} src={one_on_one}></img>
+                                <img className={"section-img"} src={one_on_one} alt={"One on One"}></img>
                             </div>
                         </div>
                     </div>
