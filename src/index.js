@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import {
   BrowserRouter as Router,
   Routes,
@@ -13,7 +13,6 @@ import Contact from './components/contact.js';
 import { TokenProvider } from './components/token-context.tsx';
 import 'bootstrap/dist/css/bootstrap.css';
 import './assets/styles/index.css';
-
 
 
 const Root = () => (
@@ -31,7 +30,5 @@ const Root = () => (
 );
 
 
-ReactDOM.render(
-  <Root />,
-  document.getElementById('root')
-);
+const root = createRoot(document.getElementById('root'));
+root.render(<Root />);
