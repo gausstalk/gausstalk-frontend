@@ -10,10 +10,6 @@ import {TokenContext} from "./token-context.tsx";
 class CustomNavbar extends React.Component {
   static contextType = TokenContext;
 
-  constructor(props) {
-    super(props);
-  }
-
   navlinks(props) {
     let token = props.token;
     if(token === null) {
