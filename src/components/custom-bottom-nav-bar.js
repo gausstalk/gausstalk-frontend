@@ -1,5 +1,6 @@
 import React from 'react';
 import {Container, Nav, Navbar} from 'react-bootstrap';
+import {Link} from 'react-router-dom';
 import logo192 from '../assets/images/logo192.png';
 
 class CustomBottomNavbar extends React.Component {
@@ -17,12 +18,12 @@ class CustomBottomNavbar extends React.Component {
                                 height="30"
                                 className="d-inline-block align-top"
                             />{' '}
-                            <p>© 2022 GaussLabs, Inc.</p>
+                            <span>© 2022 GaussLabs, Inc.</span>
                         </Navbar.Brand>
                         <Nav className="me-auto">
-                            <Nav.Link href="/contact">Contact</Nav.Link>
-                            <Nav.Link href="#features">Features</Nav.Link>
-                            <Nav.Link href="#pricing">Pricing</Nav.Link>
+                            <Nav.Link as={Link} to="/contact">Contact</Nav.Link>
+                            <Nav.Link herf="/#features">Features</Nav.Link>
+                            <Nav.Link herf="/#pricing">Pricing</Nav.Link>
 
                         </Nav>
                     </Container>

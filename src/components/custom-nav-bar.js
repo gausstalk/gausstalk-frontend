@@ -1,5 +1,6 @@
 import React from 'react';
 import {Container, Nav, Navbar} from 'react-bootstrap';
+import {Link} from 'react-router-dom';
 import axios from 'axios';
 import urlJoin from 'url-join';
 
@@ -15,18 +16,18 @@ class CustomNavbar extends React.Component {
     if(token === null) {
       return (
           <>
-            <Nav.Link href="#about">About</Nav.Link>
-            <Nav.Link href="#features">Features</Nav.Link>
-            <Nav.Link href={"/contact"}>Contact Us</Nav.Link>
+            <Nav.Link href="/#about">About</Nav.Link>
+            <Nav.Link href="/#features">Features</Nav.Link>
+            <Nav.Link as={Link} to={"/contact"}>Contact Us</Nav.Link>
           </>
       )
     }
     else {
       return (
           <>
-              <Nav.Link href="/chat">Chat</Nav.Link>
-              <Nav.Link href="/one-on-one">1:1</Nav.Link>
-              <Nav.Link href={"/lunch-together"}>Lunch Together</Nav.Link>
+              <Nav.Link as={Link} to="/chat">Chat</Nav.Link>
+              <Nav.Link as={Link} to="/one-on-one">1:1</Nav.Link>
+              <Nav.Link as={Link} to="/lunch-together">Lunch Together</Nav.Link>
           </>
       )
     }
@@ -69,7 +70,7 @@ class CustomNavbar extends React.Component {
       <>
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" sticky={"top"}>
           <Container>
-            <Navbar.Brand href="#home">
+            <Navbar.Brand herf="/#home">
               <img
                   alt=""
                   src={logo192}
