@@ -1,0 +1,9 @@
+.privacy-policy-title {
+  font-size: 2em;
+}
+
+.privacy-policy-content {
+  overflow: scroll;
+  height: 20em;
+  border: 1px solid #000000;
+}

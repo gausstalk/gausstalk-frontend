@@ -37,8 +37,7 @@ class CustomNavbar extends React.Component {
     let token = props.token;
     let setToken = props.setToken;
 
-    const authUrl = urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/user/v1/auth/');
-    axios.get(authUrl, {
+    axios.get(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/user/v1/user/'), {
       headers: { Authorization: `Bearer ${token}` },
       withCredentials: true,
     }).then(function (response) {
