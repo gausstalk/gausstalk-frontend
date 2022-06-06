@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from '@mui/material/Button';
+import urlJoin from 'url-join';
 
 import CustomNavbar from './custom-nav-bar.js';
 import CustomBottomNavbar from './custom-bottom-nav-bar.js';
@@ -13,6 +14,9 @@ import one_on_one from '../assets/images/one-on-one.png'
 
 class Start extends React.Component {
     render() {
+        let redirectUrl = urlJoin(process.env.REACT_APP_FRONTEND_BASE_URL, 'auth');
+        let loginUrl = `https://login.microsoftonline.com/cfcd9b87-7c5a-4042-9129-abee6253febe/oauth2/v2.0/authorize?client_id=7fc37514-c400-4b28-a6d6-e19a9ae981b6&response_type=code&redirect_uri=${redirectUrl}&scope=User.read`;
+
         return (
             <>
                 <CustomNavbar />
@@ -21,17 +25,17 @@ class Start extends React.Component {
                         <div className={"header-content content"}>
                             <div className={"header-copy"}>
                                 <h1 className={"header-h1 smaller-text-space"}>Gauss Talk</h1>
-                                <p className>
+                                <p>
                                     A platform where Gaussians can communicate, discuss, and share their different ideas and improve company culture
                                 </p>
                                 <div className={"btn-group text-center"}>
-                                    <Button href="https://login.microsoftonline.com/cfcd9b87-7c5a-4042-9129-abee6253febe/oauth2/v2.0/authorize?client_id=7fc37514-c400-4b28-a6d6-e19a9ae981b6&response_type=code&redirect_uri=http://localhost:3000/auth&scope=User.read" target="_self" variant={"contained"}>
+                                    <Button href={loginUrl} target="_self" variant={"contained"}>
                                             JOIN&nbsp;NOW
                                     </Button>
                                 </div>
                             </div>
                             <div className={"header-img-wrapper"}>
-                                <img className={"header-img"} src={start_img_1}></img>
+                                <img className={"header-img"} src={start_img_1} alt={"Start 1"}></img>
                             </div>
                         </div>
                     </div>
@@ -41,12 +45,12 @@ class Start extends React.Component {
                         <div className={"section-content content"}>
                             <div className={"section-copy"}>
                                 <h1 className={"section-h1"}>Company Chat</h1>
-                                <p className>
+                                <p>
                                     A live chat room where you can communicate with all of the Gaussians
                                 </p>
                             </div>
                             <div className={"section-img-wrapper"}>
-                                <img className={"section-img"} src={company_chat}></img>
+                                <img className={"section-img"} src={company_chat} alt={"Company Chat"}></img>
                             </div>
                         </div>
                     </div>
@@ -55,11 +59,11 @@ class Start extends React.Component {
                     <div className={"section-solid"}>
                         <div className={"section-content content"}>
                             <div className={"section-img-wrapper"}>
-                                <img className={"section-img"} src={lunch_together}></img>
+                                <img className={"section-img"} src={lunch_together} alt={"Lunch Together"}></img>
                             </div>
                             <div className={"section-copy"}>
                                 <h1 className={"section-h1"}>Lunch Together</h1>
-                                <p className>
+                                <p>
                                     Gather people to eat lunch together. Upload the menu and place of your choice and just wait for people to join!
                                 </p>
                             </div>
@@ -71,11 +75,11 @@ class Start extends React.Component {
                         <div className={"section-content content"}>
                             <div className={"section-copy"}>
                                 <h1 className={"section-h1"}>Random 1 : 1</h1>
-                                <p className>
+                                <p>
                                     Want to meet new coworkers? Just register for random 1 : 1s and we will directly match you!                                </p>
                             </div>
                             <div className={"section-img-wrapper"}>
-                                <img className={"section-img"} src={one_on_one}></img>
+                                <img className={"section-img"} src={one_on_one} alt={"One on One"}></img>
                             </div>
                         </div>
                     </div>
