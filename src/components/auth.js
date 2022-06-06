@@ -26,7 +26,7 @@ const Auth = () => {
       loginMessage.innerHTML = response.data;
       let gaussAccessToken = response.data['gauss_access_token'];
       setToken(gaussAccessToken);
-      navigate("/chat");
+      navigate("/signup");
     }).catch(function (error) {
       // error handling
     });
