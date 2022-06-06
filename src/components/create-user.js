@@ -7,7 +7,7 @@ import { TokenContext } from './token-context.tsx';
 
 
 const postUser = (token, mail, name, setMessage) => {
-  axios.post(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/user/v1/user'), {
+  axios.post(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/user/v1/user/'), {
     mail: mail,
     name: name,
   }, {
@@ -33,7 +33,7 @@ export default function CreateUser() {
 
   useEffect(() => {
     if(message === creating_user_message) {  // keep it from running multiple times
-      axios.get(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/user/v1/auth'), {
+      axios.get(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/user/v1/auth/'), {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       }).then(function (response) {
