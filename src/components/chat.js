@@ -1,18 +1,58 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import Button from 'react-bootstrap/Button';
 import { FormControl, InputGroup } from 'react-bootstrap';
 import urlJoin from 'url-join';
 
 import { TokenContext } from './token-context.tsx';
 import CustomNavbar from './custom-nav-bar.js';
-
+import axios from "axios";
 
 class Chat extends React.Component {
-  static contextType = TokenContext;
   ws;
 
   constructor(props) {
     super(props);
+    async function getPreviousMessages() {
+      const chatUrl = urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/chat/v1')
+      let messages = []
+      try {
+        const response = await axios.get(chatUrl, {
+          params: {'room_name': "companywide", "offset": 0, "size": 10},
+          withCredentials: true
+        });
+        messages = response.data
+      } catch (error) {
+        console.log('Unable to retrieve messages.');
+        console.log(error)
+      }
+      return messages
+    }
+
+    function drawBubble(messages, currentUser) {
+      for  (let i = 0; i < messages.length; i++){
+        let messageDict = messages[i]
+        let chatArea = document.getElementById('chat-area');
+        let message = document.createElement('p');
+        let content = document.createTextNode(messageDict["content"]);
+        message.appendChild(content);
+        if(currentUser[1] === messageDict["from"]) {
+          message.classList.add('chat-bubble-me');
+        }
+        else {
+          message.classList.add('chat-bubble-other')
+        }
+        chatArea.appendChild(message);
+      }
+    }
+
+    let previousMessagesPromise = getPreviousMessages();
+    previousMessagesPromise.then((res) => {
+      console.log(res)
+      if (res.length > 0) {
+        drawBubble(res, ["Yooha Bae", "Yooha Bae"])
+      }
+    })
+
 
     const websocketUrl = urlJoin(process.env.REACT_APP_WEBSOCKET_BASE_URL, 'apps/chat/v1/ws/');
     this.ws = new WebSocket(websocketUrl);
@@ -20,12 +60,14 @@ class Chat extends React.Component {
       console.log('connected!!');
     };
     this.ws.onmessage = function(event) {
-      let chatArea = document.getElementById('chat-area');
-      let message = document.createElement('p');
-      let content = document.createTextNode(event.data);
-      message.appendChild(content);
-      message.classList.add('chat-bubble-me');
-      chatArea.appendChild(message);
+      let messageJson = event.data;
+      // know it seems weird but couldn't find a way to solve this
+      let messageString = JSON.parse(messageJson);
+      let messageDict = JSON.parse(messageString);
+
+      let currentUser = ["Yooha Bae", "Yooha Bae"]
+
+      drawBubble([messageDict], currentUser)
     };
   }
 
