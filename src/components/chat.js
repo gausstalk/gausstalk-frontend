@@ -55,6 +55,11 @@ class Chat extends React.Component {
     })
 
 
+    this.state = {
+      mail: window.sessionStorage.getItem('mail'),
+      name: window.sessionStorage.getItem('name'),
+    };
+
     const websocketUrl = urlJoin(process.env.REACT_APP_WEBSOCKET_BASE_URL, 'apps/chat/v1/ws/');
     this.ws = new WebSocket(websocketUrl);
     this.ws.onopen = () => {
