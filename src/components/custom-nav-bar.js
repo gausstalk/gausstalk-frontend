@@ -49,6 +49,9 @@ class CustomNavbar extends React.Component {
 
       let gaussAccessToken = response.data['gauss_access_token'];
       setToken(gaussAccessToken);
+
+      window.sessionStorage.setItem('mail', response.data.mail);
+      window.sessionStorage.setItem('name', response.data.name);
     }).catch(function (error) {
       // error
     });
