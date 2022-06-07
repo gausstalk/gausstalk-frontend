@@ -2,10 +2,11 @@ import React, {useContext} from 'react';
 import Button from 'react-bootstrap/Button';
 import { FormControl, InputGroup } from 'react-bootstrap';
 import urlJoin from 'url-join';
+import axios from "axios";
 
 import { TokenContext } from './token-context.tsx';
 import CustomNavbar from './custom-nav-bar.js';
-import axios from "axios";
+
 
 class Chat extends React.Component {
   ws;
@@ -13,7 +14,7 @@ class Chat extends React.Component {
   constructor(props) {
     super(props);
     async function getPreviousMessages() {
-      const chatUrl = urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/chat/v1')
+      const chatUrl = urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/chat/v1/')
       let messages = []
       try {
         const response = await axios.get(chatUrl, {
