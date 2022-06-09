@@ -7,53 +7,31 @@ import axios from "axios";
 import { TokenContext } from './token-context.tsx';
 import CustomNavbar from './custom-nav-bar.js';
 
+function drawBubble(messages, mail, name) {
+  for  (let i = 0; i < messages.length; i++){
+    let messageDict = messages[i]
+    let chatArea = document.getElementById('chat-area');
+    let message = document.createElement('p');
+    let content = document.createTextNode(messageDict["content"]);
+    message.appendChild(content);
+    if(name === messageDict["sender"]) {
+      message.classList.add('chat-bubble-me');
+    }
+    else {
+      message.classList.add('chat-bubble-other')
+    }
+    chatArea.appendChild(message);
+  }
+}
 
 class Chat extends React.Component {
   ws;
+  static contextType = TokenContext;
 
-  constructor(props) {
-    super(props);
-    async function getPreviousMessages() {
-      const chatUrl = urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/chat/v1/')
-      let messages = []
-      try {
-        const response = await axios.get(chatUrl, {
-          params: {'room_name': "companywide", "offset": 0, "size": 10},
-          withCredentials: true
-        });
-        messages = response.data
-      } catch (error) {
-        console.log('Unable to retrieve messages.');
-        console.log(error)
-      }
-      return messages
-    }
 
-    function drawBubble(messages, currentUser) {
-      for  (let i = 0; i < messages.length; i++){
-        let messageDict = messages[i]
-        let chatArea = document.getElementById('chat-area');
-        let message = document.createElement('p');
-        let content = document.createTextNode(messageDict["content"]);
-        message.appendChild(content);
-        if(currentUser[1] === messageDict["from"]) {
-          message.classList.add('chat-bubble-me');
-        }
-        else {
-          message.classList.add('chat-bubble-other')
-        }
-        chatArea.appendChild(message);
-      }
-    }
-
-    let previousMessagesPromise = getPreviousMessages();
-    previousMessagesPromise.then((res) => {
-      console.log(res)
-      if (res.length > 0) {
-        drawBubble(res, ["Yooha Bae", "Yooha Bae"])
-      }
-    })
-
+  constructor(props, context) {
+    super(props, context);
+    const me = this
 
     this.state = {
       mail: window.sessionStorage.getItem('mail'),
@@ -70,11 +48,33 @@ class Chat extends React.Component {
       // know it seems weird but couldn't find a way to solve this
       let messageString = JSON.parse(messageJson);
       let messageDict = JSON.parse(messageString);
-
-      let currentUser = ["Yooha Bae", "Yooha Bae"]
-
-      drawBubble([messageDict], currentUser)
+      drawBubble([messageDict], me.state.mail, me.state.name)
     };
+  }
+
+
+
+  getPreviousMessages(props) {
+      const chatUrl = urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/chat/v1/')
+      let token = props.token;
+      let mail = props.mail;
+      let name = props.name;
+      try {
+        axios.get(chatUrl, {
+          params: {'room_name': "companywide", "offset": 0, "size": 10},
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        }).then((res) => {
+          if (res.data.length > 0) {
+            drawBubble(res.data, mail, name)
+          }
+        }).catch((error) => {
+          console.log(error)
+        })
+      } catch (error) {
+        console.log('Unable to retrieve messages.');
+        console.log(error)
+      }
   }
 
   sendMessage = (event) => {
@@ -93,6 +93,8 @@ class Chat extends React.Component {
   }
 
   render() {
+    const {token, setToken } = this.context;
+    const {mail, name} = this.state;
     return (
       <>
         <CustomNavbar />
@@ -104,6 +106,7 @@ class Chat extends React.Component {
               <p className={'chat-bubble-me'}>
                 Nice to meet you
               </p>
+            <this.getPreviousMessages token={token} mail={mail} name={name}/>
           </div>
           <form action='src/index' onSubmit={this.sendMessage} onKeyPress={this.onCheckEnter}>
             <InputGroup className="mb-3">
