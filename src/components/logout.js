@@ -12,6 +12,10 @@ const Logout = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // clear session storage
+    window.sessionStorage.setItem('mail', null);
+    window.sessionStorage.setItem('name', null);
+
     // delete gauss_access_token from memory
     setToken(null);
 
