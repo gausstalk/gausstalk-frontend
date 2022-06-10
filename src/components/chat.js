@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import Button from 'react-bootstrap/Button';
 import { FormControl, InputGroup } from 'react-bootstrap';
 import urlJoin from 'url-join';
@@ -59,7 +59,7 @@ function formatTime(raw_time) {
   return `${local_year}/${local_month}/${local_day} ${local_hour}:${local_minute}`
 }
 
-function drawBubble(messages, mail, name) {
+async function drawBubble(messages, mail, name) {
   let previousUser = null;
   let previousTime = null;
   for  (let i = 0; i < messages.length; i++){
@@ -135,14 +135,16 @@ class Chat extends React.Component {
   ws;
   static contextType = TokenContext;
 
-
   constructor(props, context) {
     super(props, context);
     const me = this
+    this.messagesEndRef = React.createRef();
+    this.getPreviousMessages = this.getPreviousMessages.bind(this);
 
     this.state = {
       mail: window.sessionStorage.getItem('mail'),
       name: window.sessionStorage.getItem('name'),
+      domReady: false
     };
 
     const websocketUrl = urlJoin(process.env.REACT_APP_WEBSOCKET_BASE_URL, `apps/chat/v1/ws/${context.token}`);
@@ -150,21 +152,21 @@ class Chat extends React.Component {
     this.ws.onopen = () => {
       console.log('connected!!');
     };
-    this.ws.onmessage = function(event) {
+    this.ws.onmessage = async function (event) {
       let messageJson = event.data;
       // know it seems weird but couldn't find a way to solve this
       let messageString = JSON.parse(messageJson);
       let messageDict = JSON.parse(messageString);
-      drawBubble([messageDict], me.state.mail, me.state.name)
+      await drawBubble([messageDict], me.state.mail, me.state.name)
+      me.scrollToBottom();
     };
   }
 
-  getPreviousMessages(props) {
+  getPreviousMessages(context, state) {
       const chatUrl = urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/chat/v1/')
-      let token = props.token;
-      let mail = props.mail;
-      let name = props.name;
-
+      let token = context.token;
+      let mail = state.mail;
+      let name = state.name;
       try {
         if (token === null) {
           return;
@@ -173,9 +175,11 @@ class Chat extends React.Component {
           params: {'room_name': "companywide", "offset": 0, "size": 30},
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true
-        }).then((res) => {
+        }).then(async (res) => {
           if (res.data.length > 0) {
-            drawBubble(res.data, mail, name)
+            await drawBubble(res.data, mail, name)
+            //me.setState({'domReady': true});
+            this.scrollToBottom();
           }
         }).catch((error) => {
           console.log(error)
@@ -186,7 +190,10 @@ class Chat extends React.Component {
       }
   }
 
-
+  async componentDidMount() {
+    await this.getPreviousMessages(this.context, this.state);
+    this.scrollToBottom();
+  }
 
   sendMessage = (event) => {
     let input = document.getElementById("chat-input");
@@ -203,6 +210,11 @@ class Chat extends React.Component {
     }
   }
 
+  scrollToBottom = () => {
+    let element = this.messagesEndRef.current
+    element.scroll({ top: element.scrollHeight, behavior: "smooth"});
+  }
+
   render() {
     const { token } = this.context;
     const {mail, name} = this.state;
@@ -210,8 +222,9 @@ class Chat extends React.Component {
       <>
         <CustomNavbar />
         <div className='chat-frame'>
-          <div className='chat-area' id={'chat-area'}>
-            <this.getPreviousMessages token={token} mail={mail} name={name}/>
+          <div>
+            <div className='chat-area' id={'chat-area'} ref={this.messagesEndRef}>
+            </div>
           </div>
           <form action='src/index' onSubmit={this.sendMessage} onKeyPress={this.onCheckEnter}>
             <InputGroup className="mb-3">
