@@ -1,10 +1,9 @@
-import React, {useRef} from 'react';
+import React from 'react';
 import Button from 'react-bootstrap/Button';
 import { FormControl, InputGroup } from 'react-bootstrap';
 import urlJoin from 'url-join';
 import axios from "axios";
 
-import { TokenContext } from './token-context.tsx';
 import CustomNavbar from './custom-nav-bar.js';
 
 function hexToRGB(hex) {
@@ -50,7 +49,7 @@ function formatTime(raw_time) {
   let current_year = today.getFullYear();
   let current_month = String(today.getMonth() + 1).padStart(2, '0');
   let current_day = String(today.getDate()).padStart(2, '0');
-  if (current_year == local_year && current_month == local_month && current_day == local_day) {
+  if (current_year === local_year && current_month === local_month && current_day === local_day) {
     return local_hour + ":" + local_minute;
   }
   else if (current_year === local_year) {
@@ -133,10 +132,9 @@ async function drawBubble(messages, mail, name) {
 
 class Chat extends React.Component {
   ws;
-  static contextType = TokenContext;
 
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
     const me = this
     this.messagesEndRef = React.createRef();
     this.getPreviousMessages = this.getPreviousMessages.bind(this);
@@ -147,7 +145,9 @@ class Chat extends React.Component {
       domReady: false
     };
 
-    const websocketUrl = urlJoin(process.env.REACT_APP_WEBSOCKET_BASE_URL, `apps/chat/v1/ws/${context.token}`);
+    let token = window.sessionStorage.getItem('gaussAccessToken');
+
+    const websocketUrl = urlJoin(process.env.REACT_APP_WEBSOCKET_BASE_URL, `apps/chat/v1/ws/${token}`);
     this.ws = new WebSocket(websocketUrl);
     this.ws.onopen = () => {
       console.log('connected!!');
@@ -162,9 +162,9 @@ class Chat extends React.Component {
     };
   }
 
-  getPreviousMessages(context, state) {
+  getPreviousMessages(state) {
       const chatUrl = urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/chat/v1/')
-      let token = context.token;
+      let token = window.sessionStorage.getItem('gaussAccessToken');
       let mail = state.mail;
       let name = state.name;
       try {
@@ -190,8 +190,8 @@ class Chat extends React.Component {
       }
   }
 
-  async componentDidMount() {
-    await this.getPreviousMessages(this.context, this.state);
+  componentDidMount() {
+    this.getPreviousMessages(this.state);
     this.scrollToBottom();
   }
 
@@ -216,8 +216,6 @@ class Chat extends React.Component {
   }
 
   render() {
-    const { token } = this.context;
-    const {mail, name} = this.state;
     return (
       <>
         <CustomNavbar />

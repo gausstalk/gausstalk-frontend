@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 
@@ -6,12 +6,11 @@ import axios from 'axios';
 import urlJoin from 'url-join';
 
 import CustomNavbar from './custom-nav-bar.js';
-import { TokenContext } from './token-context.tsx';
 import '../assets/styles/signup.css';
 
 
 export default function Signup() {
-  const { token } = useContext(TokenContext);
+  const token = window.sessionStorage.getItem('gaussAccessToken');
   const navigate = useNavigate();
 
   useEffect(() => {
