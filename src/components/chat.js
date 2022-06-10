@@ -7,20 +7,78 @@ import axios from "axios";
 import { TokenContext } from './token-context.tsx';
 import CustomNavbar from './custom-nav-bar.js';
 
+function formatTime(raw_time) {
+  let local_time = new Date(raw_time);
+  let local_year = local_time.getFullYear();
+  let local_month = String(local_time.getMonth() + 1).padStart(2, '0');
+  let local_day = String(local_time.getDate()).padStart(2, '0');
+  let local_hour = local_time.getHours();
+  let local_minute = local_time.getMinutes();
+
+  let today = new Date();
+  let current_year = today.getFullYear();
+  let current_month = String(today.getMonth() + 1).padStart(2, '0');
+  let current_day = String(today.getDate()).padStart(2, '0');
+  if (current_year == local_year && current_month == local_month && current_day == local_day) {
+    return local_hour + ":" + local_minute;
+  }
+  else if (current_year === local_year) {
+    return `${local_month}/${local_day} ${local_hour}:${local_minute}`
+  }
+  return `${local_year}/${local_month}/${local_day} ${local_hour}:${local_minute}`
+}
+
 function drawBubble(messages, mail, name) {
   for  (let i = 0; i < messages.length; i++){
-    let messageDict = messages[i]
+    let messageDict = messages[i];
+    let content = messageDict["content"];
+    let sender = messageDict["sender"];
+    let time = messageDict["time"];
+    let formattedTime = formatTime(time);
+    let initial = sender.split(" ").map((n)=>n[0]).join("");
     let chatArea = document.getElementById('chat-area');
-    let message = document.createElement('p');
-    let content = document.createTextNode(messageDict["content"]);
-    message.appendChild(content);
-    if(name === messageDict["sender"]) {
-      message.classList.add('chat-bubble-me');
+
+    let chatContainer = document.createElement('div');
+    chatContainer.classList.add('chat-container');
+
+    let messageContainer = document.createElement('div');
+    messageContainer.classList.add('message-container');
+
+    let contentContainer = document.createElement('p');
+    contentContainer.innerText = content;
+    contentContainer.classList.add('content-container');
+
+    let userContainer = document.createElement('div');
+    userContainer.innerText = sender;
+    userContainer.classList.add('user-name-container');
+
+    let timeContainer = document.createElement('div');
+    timeContainer.innerText = formattedTime
+    timeContainer.classList.add('time-container');
+
+    let initialContainer = document.createTextNode(initial);
+    let profileImageContainer = document.createElement('div');
+    profileImageContainer.classList.add('circle');
+    profileImageContainer.classList.add('profile-image-container');
+
+    profileImageContainer.appendChild(initialContainer)
+
+    if(name === sender) {
+      messageContainer.classList.add('chat-bubble-me');
+      chatContainer.style.alignSelf = 'flex-end'
     }
     else {
-      message.classList.add('chat-bubble-other')
+      messageContainer.classList.add('chat-bubble-other')
+      chatContainer.appendChild(profileImageContainer);
+      chatContainer.style.alignSelf = 'flex-start'
+      messageContainer.appendChild(userContainer);
     }
-    chatArea.appendChild(message);
+
+    messageContainer.appendChild(contentContainer);
+    messageContainer.appendChild(timeContainer);
+    chatContainer.appendChild(messageContainer);
+
+    chatArea.appendChild(chatContainer);
   }
 }
 
@@ -55,16 +113,22 @@ class Chat extends React.Component {
 
 
   getPreviousMessages(props) {
+      console.log(props)
       const chatUrl = urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/chat/v1/')
       let token = props.token;
       let mail = props.mail;
       let name = props.name;
+
       try {
+        if (token === null) {
+          return;
+        }
         axios.get(chatUrl, {
           params: {'room_name': "companywide", "offset": 0, "size": 10},
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true
         }).then((res) => {
+          console.log("called")
           if (res.data.length > 0) {
             drawBubble(res.data, mail, name)
           }
@@ -76,6 +140,8 @@ class Chat extends React.Component {
         console.log(error)
       }
   }
+
+
 
   sendMessage = (event) => {
     let input = document.getElementById("chat-input");
@@ -100,12 +166,6 @@ class Chat extends React.Component {
         <CustomNavbar />
         <div className='chat-frame'>
           <div className='chat-area' id={'chat-area'}>
-              <p className={'chat-bubble-other'}>
-                  Hi
-              </p>
-              <p className={'chat-bubble-me'}>
-                Nice to meet you
-              </p>
             <this.getPreviousMessages token={token} mail={mail} name={name}/>
           </div>
           <form action='src/index' onSubmit={this.sendMessage} onKeyPress={this.onCheckEnter}>

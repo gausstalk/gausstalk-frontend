@@ -14,8 +14,7 @@ body {
 .chat-frame {
   padding: 1em;
   width: 100%;
-  height: 100%;
-  border: 0.1em solid black;
+  height: 80vh;
 }
 
 .chat-area {
@@ -25,26 +24,23 @@ body {
   display: flex;
   flex-direction: column;
   font-family: "SanFrancisco";
-  font-size: 1.25rem;
-  margin: 0 auto 1rem;
-  padding: 0.5rem 1.5rem;
+  margin-bottom: 10px;
   height: 80vh;
-  overflow: auto
+  overflow: auto;
+  padding: 15px;
 }
 
-.chat-area p::before,
-.chat-area p::after {
+.chat-area div::before,
+.chat-area div::after {
   bottom: -0.1rem;
   content: "";
   height: 1rem;
   position: absolute;
 }
 
-.chat-area p {
+.chat-area div {
   border-radius: 1.15rem;
   line-height: 1.25;
-  max-width: 75%;
-  padding: 0.5rem .875rem;
   position: relative;
   word-wrap: break-word;
 }
@@ -60,19 +56,68 @@ body {
   height: 3em;
 }
 
-p.chat-bubble-other {
+div.chat-bubble-other {
   align-items: flex-start;
   background-color: #e5e5ea;
   color: #000;
 }
 
-p[class^="chat-bubble-"] {
-  margin: 0.5rem 0;
-  width: fit-content;
+.chat-bubble-other .content-container {
+  color: black;
 }
 
-p.chat-bubble-me {
+.chat-bubble-me .content-container {
+  color: white
+}
+
+div[class^="chat-bubble-"] {
+  margin: 0.5rem 0;
+  width: fit-content;
+  display: inline-block;
+}
+
+div.chat-bubble-me {
   align-self: flex-end;
   background-color: #248bf5;
   color: #fff;
+}
+
+.circle {
+  background-color: mediumpurple;
+  color:white;
+  width:35px;
+  height:35px;
+  margin-right: 10px;
+  margin-left: 10px;
+  border-radius: 50%;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chat-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.message-container {
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 15px;
+}
+
+.user-name-container, .time-container, .content-container {
+  padding: 0;
+  margin: 0;
+}
+
+.user-name-container {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.time-container {
+  font-size: 12px;
+  opacity: 70%;
 }
