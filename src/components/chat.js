@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import Button from 'react-bootstrap/Button';
 import { FormControl, InputGroup } from 'react-bootstrap';
 import urlJoin from 'url-join';
@@ -38,7 +38,7 @@ class Chat extends React.Component {
       name: window.sessionStorage.getItem('name'),
     };
 
-    const websocketUrl = urlJoin(process.env.REACT_APP_WEBSOCKET_BASE_URL, 'apps/chat/v1/ws/');
+    const websocketUrl = urlJoin(process.env.REACT_APP_WEBSOCKET_BASE_URL, `apps/chat/v1/ws/${context.token}`);
     this.ws = new WebSocket(websocketUrl);
     this.ws.onopen = () => {
       console.log('connected!!');
@@ -93,7 +93,7 @@ class Chat extends React.Component {
   }
 
   render() {
-    const {token, setToken } = this.context;
+    const { token } = this.context;
     const {mail, name} = this.state;
     return (
       <>
