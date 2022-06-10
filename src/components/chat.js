@@ -7,13 +7,44 @@ import axios from "axios";
 import { TokenContext } from './token-context.tsx';
 import CustomNavbar from './custom-nav-bar.js';
 
+function hexToRGB(hex) {
+  hex = hex.substring(1);
+  let bigint = parseInt(hex, 16);
+  let r = (bigint >> 16) & 255;
+  let g = (bigint >> 8) & 255;
+  let b = bigint & 255;
+  return [r, g, b];
+}
+
+function contrastColor(hex) {
+  let rgb = hexToRGB(hex);
+  let color = Math.round(((parseInt(rgb[0]) * 299) +
+      (parseInt(rgb[1]) * 587) +
+      (parseInt(rgb[2]) * 114)) / 1000);
+  let textColor = (color > 125) ? 'black' : 'white';
+  return textColor;
+}
+
+function stringToColour(email) {
+  let hash = 0;
+  for (let i = 0; i < email.length; i++) {
+    hash = email.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  let colour = '#';
+  for (let i = 0; i < 3; i++) {
+    let value = (hash >> (i * 8)) & 0xFF;
+    colour += ('00' + value.toString(16)).substr(-2);
+  }
+  return colour;
+}
+
 function formatTime(raw_time) {
   let local_time = new Date(raw_time);
   let local_year = local_time.getFullYear();
   let local_month = String(local_time.getMonth() + 1).padStart(2, '0');
   let local_day = String(local_time.getDate()).padStart(2, '0');
-  let local_hour = local_time.getHours();
-  let local_minute = local_time.getMinutes();
+  let local_hour = ('0'+local_time.getHours()).slice(-2);
+  let local_minute = ('0'+local_time.getMinutes()).slice(-2);
 
   let today = new Date();
   let current_year = today.getFullYear();
@@ -39,6 +70,8 @@ function drawBubble(messages, mail, name) {
     let formattedTime = formatTime(time);
     let initial = sender.split(" ").map((n)=>n[0]).join("");
     let chatArea = document.getElementById('chat-area');
+    let profileColor = stringToColour(sender);
+    let textColor = contrastColor(profileColor);
 
     let chatContainer = document.createElement('div');
     chatContainer.classList.add('chat-container');
@@ -62,6 +95,8 @@ function drawBubble(messages, mail, name) {
     let profileImageContainer = document.createElement('div');
     profileImageContainer.classList.add('circle');
     profileImageContainer.classList.add('profile-image-container');
+    profileImageContainer.style.backgroundColor = profileColor;
+    profileImageContainer.style.color = textColor;
 
     profileImageContainer.appendChild(initialContainer)
 
@@ -124,8 +159,6 @@ class Chat extends React.Component {
     };
   }
 
-
-
   getPreviousMessages(props) {
       const chatUrl = urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/chat/v1/')
       let token = props.token;
@@ -137,7 +170,7 @@ class Chat extends React.Component {
           return;
         }
         axios.get(chatUrl, {
-          params: {'room_name': "companywide", "offset": 0, "size": 10},
+          params: {'room_name': "companywide", "offset": 0, "size": 30},
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true
         }).then((res) => {
