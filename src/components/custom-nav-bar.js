@@ -5,14 +5,11 @@ import axios from 'axios';
 import urlJoin from 'url-join';
 
 import logo192 from '../assets/images/logo192.png';
-import {TokenContext} from "./token-context.tsx";
 
 
 class CustomNavbar extends React.Component {
-  static contextType = TokenContext;
-
   navlinks(props) {
-    let token = props.token;
+    let token = window.sessionStorage.getItem('gaussAccessToken');
     if(token === null) {
       return (
           <>
@@ -34,8 +31,7 @@ class CustomNavbar extends React.Component {
   }
 
   loginLogoutLink(props) {
-    let token = props.token;
-    let setToken = props.setToken;
+    let token = window.sessionStorage.getItem('gaussAccessToken');
 
     axios.get(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/user/v1/auth/'), {
       headers: { Authorization: `Bearer ${token}` },
@@ -48,8 +44,7 @@ class CustomNavbar extends React.Component {
       loginLogoutLink.setAttribute('href', '/logout');
 
       let gaussAccessToken = response.data['gauss_access_token'];
-      setToken(gaussAccessToken);
-
+      window.sessionStorage.setItem('gaussAccessToken', gaussAccessToken);
       window.sessionStorage.setItem('mail', response.data.mail);
       window.sessionStorage.setItem('name', response.data.name);
     }).catch(function (error) {
@@ -66,8 +61,6 @@ class CustomNavbar extends React.Component {
   }
 
   render() {
-    const { token, setToken } = this.context;
-
     return (
       <>
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" sticky={"top"}>
@@ -85,10 +78,10 @@ class CustomNavbar extends React.Component {
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
               <Nav className="me-auto">
-                <this.navlinks token={token}/>
+                <this.navlinks/>
               </Nav>
               <Nav>
-                <this.loginLogoutLink token={token} setToken={setToken} />
+                <this.loginLogoutLink/>
               </Nav>
             </Navbar.Collapse>
           </Container>

@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import urlJoin from 'url-join';
 
 import CustomNavbar from './custom-nav-bar';
-import { TokenContext } from './token-context.tsx';
 
 
 const postUser = (token, mail, name, setMessage) => {
@@ -26,7 +25,7 @@ const postUser = (token, mail, name, setMessage) => {
 
 
 export default function CreateUser() {
-  const { token } = useContext(TokenContext);
+  let token = window.sessionStorage.getItem('gaussAccessToken');
 
   let creating_user_message = 'Creating a user...';
   const [message, setMessage] = useState(creating_user_message);
