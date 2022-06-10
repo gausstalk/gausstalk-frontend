@@ -29,6 +29,8 @@ function formatTime(raw_time) {
 }
 
 function drawBubble(messages, mail, name) {
+  let previousUser = null;
+  let previousTime = null;
   for  (let i = 0; i < messages.length; i++){
     let messageDict = messages[i];
     let content = messageDict["content"];
@@ -74,11 +76,23 @@ function drawBubble(messages, mail, name) {
       messageContainer.appendChild(userContainer);
     }
 
+    if (previousUser === sender && previousTime === formattedTime) {
+      timeContainer.innerText = ""
+      userContainer.innerText = "";
+      profileImageContainer.style.visibility = "hidden";
+    }
+    else if (previousUser === sender) {
+      userContainer.innerText = "";
+      profileImageContainer.style.visibility = "hidden";
+    }
+
     messageContainer.appendChild(contentContainer);
     messageContainer.appendChild(timeContainer);
     chatContainer.appendChild(messageContainer);
 
     chatArea.appendChild(chatContainer);
+    previousUser = sender;
+    previousTime = formattedTime;
   }
 }
 
@@ -113,7 +127,6 @@ class Chat extends React.Component {
 
 
   getPreviousMessages(props) {
-      console.log(props)
       const chatUrl = urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/chat/v1/')
       let token = props.token;
       let mail = props.mail;
@@ -128,7 +141,6 @@ class Chat extends React.Component {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true
         }).then((res) => {
-          console.log("called")
           if (res.data.length > 0) {
             drawBubble(res.data, mail, name)
           }
