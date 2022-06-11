@@ -1,7 +1,12 @@
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import urlJoin from 'url-join';
+import '../assets/styles/auth.css';
 
+
+function timeout(delay: number) {
+    return new Promise( res => setTimeout(res, delay) );
+}
 
 const Auth = () => {
   const [searchParams, ] = useSearchParams();
@@ -18,19 +23,28 @@ const Auth = () => {
     }, {
       withCredentials: true,
     })
-    .then(function (response) {
-      let loginMessage = document.getElementById('login-message');
-      loginMessage.innerHTML = response.data;
-      let gaussAccessToken = response.data['gauss_access_token'];
-      window.sessionStorage.setItem('gaussAccessToken', gaussAccessToken);
-      navigate("/signup");
+    .then(async function (response) {
+        let gaussAccessToken = response.data['gauss_access_token'];
+        window.sessionStorage.setItem('gaussAccessToken', gaussAccessToken);
+        await timeout(1000)
+        navigate("/signup");
     }).catch(function (error) {
       // error handling
     });
   }
 
-  return (
-    <div id='login-message'>Login...</div>
+  return (<>
+          <div id={"loading-container"}>
+    <div className="wrapper">
+        <div className="loading"></div>
+        <div className="loading"></div>
+        <div className="loading"></div>
+        <div className="shadow"></div>
+        <div className="shadow"></div>
+        <div className="shadow"></div>
+    </div>
+          </div>
+  </>
   );
 }
 
