@@ -58,18 +58,19 @@ function formatTime(raw_time) {
   return `${local_year}/${local_month}/${local_day} ${local_hour}:${local_minute}`
 }
 
-async function drawBubble(messages, mail, name) {
+async function drawBubble(messages, mail) {
   let previousUser = null;
   let previousTime = null;
   for  (let i = 0; i < messages.length; i++){
     let messageDict = messages[i];
     let content = messageDict["content"];
-    let sender = messageDict["sender"];
+    let senderMail = messageDict["sender_mail"];
+    let senderName = messageDict["sender_name"];
     let time = messageDict["time"];
     let formattedTime = formatTime(time);
-    let initial = sender.split(" ").map((n)=>n[0]).join("");
+    let initial = senderName.split(" ").map((n)=>n[0]).join("");
     let chatArea = document.getElementById('chat-area');
-    let profileColor = stringToColour(sender);
+    let profileColor = stringToColour(senderName);
     let textColor = contrastColor(profileColor);
 
     let chatContainer = document.createElement('div');
@@ -83,7 +84,7 @@ async function drawBubble(messages, mail, name) {
     contentContainer.classList.add('content-container');
 
     let userContainer = document.createElement('div');
-    userContainer.innerText = sender;
+    userContainer.innerText = senderName;
     userContainer.classList.add('user-name-container');
 
     let timeContainer = document.createElement('div');
@@ -99,7 +100,7 @@ async function drawBubble(messages, mail, name) {
 
     profileImageContainer.appendChild(initialContainer)
 
-    if(name === sender) {
+    if(mail === senderMail) {
       messageContainer.classList.add('chat-bubble-me');
       chatContainer.style.alignSelf = 'flex-end'
     }
@@ -110,12 +111,12 @@ async function drawBubble(messages, mail, name) {
       messageContainer.appendChild(userContainer);
     }
 
-    if (previousUser === sender && previousTime === formattedTime) {
+    if (previousUser === senderMail && previousTime === formattedTime) {
       timeContainer.innerText = ""
       userContainer.innerText = "";
       profileImageContainer.style.visibility = "hidden";
     }
-    else if (previousUser === sender) {
+    else if (previousUser === senderMail) {
       userContainer.innerText = "";
       profileImageContainer.style.visibility = "hidden";
     }
@@ -125,7 +126,7 @@ async function drawBubble(messages, mail, name) {
     chatContainer.appendChild(messageContainer);
 
     chatArea.appendChild(chatContainer);
-    previousUser = sender;
+    previousUser = senderMail;
     previousTime = formattedTime;
   }
 }
@@ -157,8 +158,12 @@ class Chat extends React.Component {
       // know it seems weird but couldn't find a way to solve this
       let messageString = JSON.parse(messageJson);
       let messageDict = JSON.parse(messageString);
-      await drawBubble([messageDict], me.state.mail, me.state.name)
-      me.scrollToBottom();
+      await drawBubble([messageDict], me.state.mail);
+
+      // Scroll to bottom only when a screen is on the bottom.
+      if(me.chatAreaScrollPosition === 'bottom' || messageDict['sender_mail'] === me.state.mail) {
+        me.scrollToBottom();
+      }
     };
   }
 
@@ -166,7 +171,6 @@ class Chat extends React.Component {
       const chatUrl = urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/chat/v1/')
       let token = window.sessionStorage.getItem('gaussAccessToken');
       let mail = state.mail;
-      let name = state.name;
       try {
         if (token === null) {
           return;
@@ -177,16 +181,14 @@ class Chat extends React.Component {
           withCredentials: true
         }).then(async (res) => {
           if (res.data.length > 0) {
-            await drawBubble(res.data, mail, name)
-            //me.setState({'domReady': true});
+            await drawBubble(res.data, mail)
             this.scrollToBottom();
           }
         }).catch((error) => {
-          console.log(error)
+          console.log(error);
         })
       } catch (error) {
-        console.log('Unable to retrieve messages.');
-        console.log(error)
+        console.log('Unable to retrieve messages.', error);
       }
   }
 
@@ -215,14 +217,25 @@ class Chat extends React.Component {
     element.scroll({ top: element.scrollHeight, behavior: "smooth"});
   }
 
+  updateChatAreaScrollPosition = (event) => {
+    const { scrollHeight, scrollTop, clientHeight } = event.target;
+    const scrollPosition = scrollHeight - scrollTop - clientHeight;
+
+    if (scrollPosition > 0) {
+      this.chatAreaScrollPosition = 'floating';
+    }
+    else if (scrollPosition === 0){
+      this.chatAreaScrollPosition = 'bottom';
+    }
+  }
+
   render() {
     return (
       <>
         <CustomNavbar />
         <div className='chat-frame'>
           <div>
-            <div className='chat-area' id={'chat-area'} ref={this.messagesEndRef}>
-            </div>
+            <div className='chat-area' id={'chat-area'} ref={this.messagesEndRef} onScroll={this.updateChatAreaScrollPosition}/>
           </div>
           <form action='src/index' onSubmit={this.sendMessage} onKeyPress={this.onCheckEnter}>
             <InputGroup className="mb-3">
