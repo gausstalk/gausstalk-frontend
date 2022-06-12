@@ -3,6 +3,7 @@ import Button from 'react-bootstrap/Button';
 import { FormControl, InputGroup } from 'react-bootstrap';
 import urlJoin from 'url-join';
 import axios from "axios";
+import { Icon } from '@iconify/react';
 
 import CustomNavbar from './custom-nav-bar.js';
 
@@ -258,9 +259,9 @@ class Chat extends React.Component {
                 autoComplete={"off"}
                 id={'chat-input'}
               />
-              <Button type={'submit'} variant="primary" id="button-addon2" className={'send-button'}>
-                Send
-              </Button>
+              <button type={'submit'} className={'send-button'}>
+                <Icon icon="fluent:send-24-filled" />
+              </button>
             </InputGroup>
           </form>
         </div>
