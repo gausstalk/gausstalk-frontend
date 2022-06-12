@@ -1,8 +1,7 @@
 import CustomNavbar from "./custom-nav-bar";
 import construction from '../assets/images/construction.png'
 import React from "react";
-import lunch_together from "../assets/images/lunch-together.png";
-import company_chat from "../assets/images/company-chat.png";
+
 
 function Construction() {
     return (<>

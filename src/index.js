@@ -9,7 +9,6 @@ import Chat from './components/chat.js';
 import Auth from './components/auth.js';
 import Start from './components/start.js';
 import Logout from './components/logout.js';
-import Contact from './components/contact.js';
 import Signup from './components/signup.js';
 import CreateUser from './components/create-user.js';
 import OneOnOne from './components/one-on-one.js'
