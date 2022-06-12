@@ -1,55 +1,14 @@
-import React, { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
-
-import axios from 'axios';
-import urlJoin from 'url-join';
 
 import CustomNavbar from './custom-nav-bar.js';
 import '../assets/styles/signup.css';
 
 
 export default function Signup() {
-  const token = window.sessionStorage.getItem('gaussAccessToken');
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    async function goToMainIfUserExists() {
-      // Get the mail from the token.
-      let mail = null;
-      try {
-        const response = await axios.get(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/user/v1/auth/'), {
-          headers: { Authorization: `Bearer ${token}` },
-          withCredentials: true,
-        });
-        mail = response.data.mail;
-      } catch(error) {
-      }
-
-      // Check if the user already exists.
-      if(mail !== null) {
-        try {
-          await axios.get(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/user/v1/user/'), {
-            headers: { Authorization: `Bearer ${token}` },
-            withCredentials: true,
-          });
-
-          // If the user is already in the DB.
-          navigate('/chat');
-        } catch(error) {
-          console.log('Go to signup.');
-        }
-      }
-    }
-    goToMainIfUserExists();
-  });
-
-  if(token === null) {
-    return (
-      <>Please do Microsoft login.</>
-    );
-  }
-
+  const location = useLocation();
+  const { msAccessToken } = location.state;
   return (
     <>
       <CustomNavbar />
@@ -60,7 +19,7 @@ export default function Signup() {
         <div className='privacy-policy-title'>Korean</div>
         <div dangerouslySetInnerHTML={{ __html: privacyPolicyKr }} className='privacy-policy-content'/>
         <br/>
-        <Link to='create-user'>
+        <Link to='create-user' state={{msAccessToken: msAccessToken}}>
           <Button>Agree</Button>
         </Link>
       </div>

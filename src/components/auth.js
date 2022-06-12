@@ -23,11 +23,23 @@ const Auth = () => {
     }, {
       withCredentials: true,
     })
-    .then(async function (response) {
-        let gaussAccessToken = response.data['gauss_access_token'];
-        window.sessionStorage.setItem('gaussAccessToken', gaussAccessToken);
-        await timeout(1000);
-        navigate("/signup");
+    .then(async function (res) {
+      await timeout(500);
+
+      try {
+        const response = await axios.get(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/user/v1/user/'), {
+          headers: { Authorization: `Bearer ${res.data.ms_access_token}` },
+        });
+
+        // If the user exists.
+        window.sessionStorage.setItem('mail', response.data.mail);
+        window.sessionStorage.setItem('name', response.data.name);
+        window.sessionStorage.setItem('gaussAccessToken', response.data.gauss_access_token);
+        navigate('/chat');
+      } catch(error) {
+        // If the user doesn't exist.
+        navigate('/signup', {state: {msAccessToken: res.data.ms_access_token}});
+      }
     }).catch(function (error) {
       // error handling
     });

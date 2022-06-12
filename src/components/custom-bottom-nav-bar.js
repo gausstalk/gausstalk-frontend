@@ -1,6 +1,5 @@
 import React from 'react';
 import {Container, Nav, Navbar} from 'react-bootstrap';
-import {Link} from 'react-router-dom';
 import logo192 from '../assets/images/logo192.png';
 
 class CustomBottomNavbar extends React.Component {

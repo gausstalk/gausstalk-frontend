@@ -1,8 +1,8 @@
-import React, { useEffect }  from 'react';
+import React from 'react';
 import {Button} from "@mui/material";
 import CustomNavbar from "./custom-nav-bar";
-import register from "../assets/images/register.png";
 import {WorkingFlipDate} from './countdown'
+
 
 const getTodayMidnight = () => {
     const today = new Date()
@@ -11,6 +11,7 @@ const getTodayMidnight = () => {
     tomorrow.setHours(0, 0, 0, 0);
     return tomorrow.toISOString();
 }
+
 
 function OneOnOne() {
     getTodayMidnight();
