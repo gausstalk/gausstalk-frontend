@@ -58,92 +58,88 @@ function formatTime(raw_time) {
   return `${local_year}/${local_month}/${local_day} ${local_hour}:${local_minute}`
 }
 
-async function drawBubble(messages, mail) {
-  let previousUser = null;
-  let previousTime = null;
-  for  (let i = 0; i < messages.length; i++){
-    let messageDict = messages[i];
-    let content = messageDict["content"];
-    let senderMail = messageDict["sender_mail"];
-    let senderName = messageDict["sender_name"];
-    let time = messageDict["time"];
-    let formattedTime = formatTime(time);
-    let initial = senderName.split(" ").map((n)=>n[0]).join("");
-    let chatArea = document.getElementById('chat-area');
-    let profileColor = stringToColour(senderName);
-    let textColor = contrastColor(profileColor);
 
-    let chatContainer = document.createElement('div');
-    chatContainer.classList.add('chat-container');
+function drawBubble(messageDict, mail, previousUser, previousTime) {
+  let content = messageDict["content"];
+  let senderMail = messageDict["sender_mail"];
+  let senderName = messageDict["sender_name"];
+  let time = messageDict["time"];
+  let formattedTime = formatTime(time);
+  let initial = senderName.split(" ").map((n)=>n[0]).join("");
+  let chatArea = document.getElementById('chat-area');
+  let profileColor = stringToColour(senderName);
+  let textColor = contrastColor(profileColor);
 
-    let messageContainer = document.createElement('div');
-    messageContainer.classList.add('message-container');
+  let chatContainer = document.createElement('div');
+  chatContainer.classList.add('chat-container');
 
-    let contentContainer = document.createElement('p');
-    contentContainer.innerText = content;
-    contentContainer.classList.add('content-container');
+  let messageContainer = document.createElement('div');
+  messageContainer.classList.add('message-container');
 
-    let userContainer = document.createElement('div');
-    userContainer.innerText = senderName;
-    userContainer.classList.add('user-name-container');
+  let contentContainer = document.createElement('p');
+  contentContainer.innerText = content;
+  contentContainer.classList.add('content-container');
 
-    let timeContainer = document.createElement('div');
-    timeContainer.innerText = formattedTime
-    timeContainer.classList.add('time-container');
+  let userContainer = document.createElement('div');
+  userContainer.innerText = senderName;
+  userContainer.classList.add('user-name-container');
 
-    let initialContainer = document.createTextNode(initial);
-    let profileImageContainer = document.createElement('div');
-    profileImageContainer.classList.add('circle');
-    profileImageContainer.classList.add('profile-image-container');
-    profileImageContainer.style.backgroundColor = profileColor;
-    profileImageContainer.style.color = textColor;
+  let timeContainer = document.createElement('div');
+  timeContainer.innerText = formattedTime
+  timeContainer.classList.add('time-container');
 
-    profileImageContainer.appendChild(initialContainer)
+  let initialContainer = document.createTextNode(initial);
+  let profileImageContainer = document.createElement('div');
+  profileImageContainer.classList.add('circle');
+  profileImageContainer.classList.add('profile-image-container');
+  profileImageContainer.style.backgroundColor = profileColor;
+  profileImageContainer.style.color = textColor;
 
-    if(mail === senderMail) {
-      messageContainer.classList.add('chat-bubble-me');
-      chatContainer.style.alignSelf = 'flex-end'
-    }
-    else {
-      messageContainer.classList.add('chat-bubble-other')
-      chatContainer.appendChild(profileImageContainer);
-      chatContainer.style.alignSelf = 'flex-start'
-      messageContainer.appendChild(userContainer);
-    }
+  profileImageContainer.appendChild(initialContainer)
 
-    if (previousUser === senderMail && previousTime === formattedTime) {
-      timeContainer.innerText = ""
-      userContainer.innerText = "";
-      profileImageContainer.style.visibility = "hidden";
-    }
-    else if (previousUser === senderMail) {
-      userContainer.innerText = "";
-      profileImageContainer.style.visibility = "hidden";
-    }
-
-    messageContainer.appendChild(contentContainer);
-    messageContainer.appendChild(timeContainer);
-    chatContainer.appendChild(messageContainer);
-
-    chatArea.appendChild(chatContainer);
-    previousUser = senderMail;
-    previousTime = formattedTime;
+  if(mail === senderMail) {
+    messageContainer.classList.add('chat-bubble-me');
+    chatContainer.style.alignSelf = 'flex-end';
   }
+  else {
+    messageContainer.classList.add('chat-bubble-other')
+    chatContainer.appendChild(profileImageContainer);
+    chatContainer.style.alignSelf = 'flex-start';
+    messageContainer.appendChild(userContainer);
+  }
+
+  if (previousUser === senderMail && formattedTime === formatTime(previousTime)) {
+    timeContainer.innerText = "";
+    userContainer.innerText = "";
+    profileImageContainer.style.visibility = "hidden";
+  }
+  else if (previousUser === senderMail) {
+    userContainer.innerText = "";
+    profileImageContainer.style.visibility = "hidden";
+  }
+
+  messageContainer.appendChild(contentContainer);
+  messageContainer.appendChild(timeContainer);
+  chatContainer.appendChild(messageContainer);
+
+  chatArea.appendChild(chatContainer);
 }
+
 
 class Chat extends React.Component {
   ws;
 
   constructor(props) {
     super(props);
-    const me = this
+    const me = this;
     this.messagesEndRef = React.createRef();
     this.getPreviousMessages = this.getPreviousMessages.bind(this);
+    this.previousUser = null;
+    this.previousTime = null;
 
     this.state = {
       mail: window.sessionStorage.getItem('mail'),
       name: window.sessionStorage.getItem('name'),
-      domReady: false
     };
 
     let token = window.sessionStorage.getItem('gaussAccessToken');
@@ -153,12 +149,14 @@ class Chat extends React.Component {
     this.ws.onopen = () => {
       console.log('connected!!');
     };
-    this.ws.onmessage = async function (event) {
+    this.ws.onmessage = (event) => {
       let messageJson = event.data;
       // know it seems weird but couldn't find a way to solve this
       let messageString = JSON.parse(messageJson);
       let messageDict = JSON.parse(messageString);
-      await drawBubble([messageDict], me.state.mail);
+
+      drawBubble(messageDict, me.state.mail, me.previousUser, me.previousTime);
+      me.setPreviousUserAndTime(messageDict['sender_mail'], messageDict['time']);
 
       // Scroll to bottom only when a screen is on the bottom.
       if(me.chatAreaScrollPosition === 'bottom' || messageDict['sender_mail'] === me.state.mail) {
@@ -167,29 +165,42 @@ class Chat extends React.Component {
     };
   }
 
+  setPreviousUserAndTime(previousUser, previousTime) {
+    this.previousUser = previousUser;
+    this.previousTime = previousTime;
+  }
+
+  getPreviousUserAndTime() {
+    return [this.previousUser, this.previousTime];
+  }
+
   getPreviousMessages(state) {
-      const chatUrl = urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/chat/v1/')
-      let token = window.sessionStorage.getItem('gaussAccessToken');
-      let mail = state.mail;
-      try {
-        if (token === null) {
-          return;
-        }
-        axios.get(chatUrl, {
-          params: {'room_name': "companywide", "offset": 0, "size": 30},
-          headers: { Authorization: `Bearer ${token}` },
-          withCredentials: true
-        }).then(async (res) => {
-          if (res.data.length > 0) {
-            await drawBubble(res.data, mail)
-            this.scrollToBottom();
-          }
-        }).catch((error) => {
-          console.log(error);
-        })
-      } catch (error) {
-        console.log('Unable to retrieve messages.', error);
+    const chatUrl = urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/chat/v1/')
+    let token = window.sessionStorage.getItem('gaussAccessToken');
+    let mail = state.mail;
+    try {
+      if (token === null) {
+        return;
       }
+      axios.get(chatUrl, {
+        params: {'room_name': "companywide", "offset": 0, "size": 30},
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+      }).then((res) => {
+        if (res.data.length > 0) {
+          res.data.forEach((message) => {
+            const [previousUser, previousTime] = this.getPreviousUserAndTime();
+            drawBubble(message, mail, previousUser, previousTime);
+            this.setPreviousUserAndTime(message['sender_mail'], message['time']);
+          });
+          this.scrollToBottom();
+        }
+      }).catch((error) => {
+        console.log(error);
+      })
+    } catch (error) {
+      console.log('Unable to retrieve messages.', error);
+    }
   }
 
   componentDidMount() {
