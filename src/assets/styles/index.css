@@ -19,7 +19,7 @@ body {
 
 .chat-area {
   background-color: #fff;
-  border: 1px solid #e5e5ea;
+  border-bottom: 1px solid #e5e5ea;
   border-radius: 0.25rem;
   display: flex;
   flex-direction: column;
