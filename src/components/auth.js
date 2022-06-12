@@ -1,7 +1,7 @@
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import urlJoin from 'url-join';
-import '../assets/styles/auth.css';
+import '../assets/styles/loading.css';
 
 
 function timeout(delay: number) {
@@ -26,7 +26,7 @@ const Auth = () => {
     .then(async function (response) {
         let gaussAccessToken = response.data['gauss_access_token'];
         window.sessionStorage.setItem('gaussAccessToken', gaussAccessToken);
-        await timeout(1000)
+        await timeout(1000);
         navigate("/signup");
     }).catch(function (error) {
       // error handling

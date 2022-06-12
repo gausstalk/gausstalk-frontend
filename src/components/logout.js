@@ -4,6 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import urlJoin from 'url-join';
 
+import '../assets/styles/loading.css';
+
+function timeout(delay: number) {
+  return new Promise( res => setTimeout(res, delay) );
+}
 
 const Logout = () => {
   const navigate = useNavigate();
@@ -22,8 +27,9 @@ const Logout = () => {
     axios.delete(authUrl, {
       headers: { Authorization: `Bearer ${token}` },
       withCredentials: true,
-    }).then(function (response) {
+    }).then(async function (response) {
       console.log('Logout succeeded!!');
+      await timeout(1000);
       navigate('/');
     }).catch(function (error) {
       console.log('Logout failed!!');
@@ -31,7 +37,18 @@ const Logout = () => {
   });
 
   return (
-    <div>Logout...</div>
+      <>
+        <div id={"loading-container"}>
+          <div className="wrapper">
+            <div className="loading"></div>
+            <div className="loading"></div>
+            <div className="loading"></div>
+            <div className="shadow"></div>
+            <div className="shadow"></div>
+            <div className="shadow"></div>
+          </div>
+        </div>
+      </>
   );
 }
 
