@@ -255,6 +255,7 @@ class Chat extends React.Component {
                 aria-label="Enter what you want to say"
                 aria-describedby="basic-addon"
                 className={'chat-input'}
+                autoComplete={"off"}
                 id={'chat-input'}
               />
               <Button type={'submit'} variant="primary" id="button-addon2" className={'send-button'}>
