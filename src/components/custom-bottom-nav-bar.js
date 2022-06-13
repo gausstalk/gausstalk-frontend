@@ -21,9 +21,6 @@ class CustomBottomNavbar extends React.Component {
                             <span id={"company-name"}>© 2022 GaussLabs, Inc.</span>
                         </Navbar.Brand>
                         <Nav className="me-auto">
-                            <Nav.Link as={Link} to="/contact">Contact</Nav.Link>
-                            <Nav.Link herf="/#features">Features</Nav.Link>
-                            <Nav.Link herf="/#pricing">Pricing</Nav.Link>
                         </Nav>
                     </Container>
                 </Navbar>
