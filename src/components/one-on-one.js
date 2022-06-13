@@ -1,10 +1,19 @@
-import React  from 'react';
+import React, { useEffect }  from 'react';
 import {Button} from "@mui/material";
 import CustomNavbar from "./custom-nav-bar";
 import register from "../assets/images/register.png";
+import {WorkingFlipDate} from './countdown'
 
+const getTodayMidnight = () => {
+    const today = new Date()
+    const tomorrow = new Date(today)
+    tomorrow.setDate(tomorrow.getDate() + 1)
+    tomorrow.setHours(0, 0, 0, 0);
+    return tomorrow.toISOString();
+}
 
 function OneOnOne() {
+    getTodayMidnight();
     return (<>
         <CustomNavbar />
             <section className={"section"} id={"features"}>
@@ -18,9 +27,7 @@ function OneOnOne() {
                             </p>
                             <Button variant="contained">Register</Button>
                         </div>
-                        <div className={"section-img-wrapper"}>
-                            <img className={"section-img"} src={register} alt={"One on One"}></img>
-                        </div>
+                        <WorkingFlipDate value={getTodayMidnight()} />
                     </div>
                 </div>
             </section>
