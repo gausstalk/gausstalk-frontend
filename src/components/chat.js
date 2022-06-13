@@ -1,10 +1,11 @@
 import React from 'react';
-import Button from 'react-bootstrap/Button';
+import {Button} from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
 import { FormControl, InputGroup } from 'react-bootstrap';
 import urlJoin from 'url-join';
 import axios from "axios";
-import { Icon } from '@iconify/react';
 
+import '../assets/styles/chat.css'
 import CustomNavbar from './custom-nav-bar.js';
 
 function hexToRGB(hex) {
@@ -259,9 +260,9 @@ class Chat extends React.Component {
                 autoComplete={"off"}
                 id={'chat-input'}
               />
-              <button type={'submit'} className={'send-button'}>
-                <Icon icon="fluent:send-24-filled" />
-              </button>
+              <Button type={'submit'} variant="contained" endIcon={<SendIcon />} id={"send-button"}>
+              Send
+              </Button>
             </InputGroup>
           </form>
         </div>
