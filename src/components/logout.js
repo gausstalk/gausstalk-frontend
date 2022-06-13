@@ -15,10 +15,10 @@ const Logout = () => {
 
   useEffect(() => {
     // clear session storage
-    window.sessionStorage.setItem('mail', null);
-    window.sessionStorage.setItem('name', null);
+    window.sessionStorage.removeItem('mail');
+    window.sessionStorage.removeItem('name');
     // delete gauss_access_token from memory
-    window.sessionStorage.setItem('gaussAccessToken', null);
+    window.sessionStorage.removeItem('gaussAccessToken');
 
     let token = window.sessionStorage.getItem('gaussAccessToken');
 
