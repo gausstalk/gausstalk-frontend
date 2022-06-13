@@ -13,6 +13,7 @@ import Contact from './components/contact.js';
 import Signup from './components/signup.js';
 import CreateUser from './components/create-user.js';
 import OneOnOne from './components/one-on-one.js'
+import Construction from './components/construction.js'
 import 'bootstrap/dist/css/bootstrap.css';
 import './assets/styles/index.css';
 
@@ -24,10 +25,11 @@ const Root = () => (
             <Route exact path="/chat" element={<Chat />} />
             <Route exact path="/auth" element={<Auth />} />
             <Route exact path="/logout" element={<Logout />} />
-            <Route exact path="/contact" element={<Contact />} />
+            <Route exact path="/contact" element={<Construction/>} />
             <Route exact path="/signup" element={<Signup />} />
             <Route exact path="/one-on-one" element={<OneOnOne/>}></Route>
             <Route exact path="/signup/create-user" element={<CreateUser />} />
+            <Route exact path={"/lunch-together"} element={<Construction/>}/>
         </Routes>
     </Router>
 );
