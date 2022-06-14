@@ -10,12 +10,20 @@ import { SnackbarProvider, useSnackbar} from 'notistack';
 
 
 const getTodayMidnight = () => {
-    const today = new Date();
-    if (today.getDate() > today.getUTCDate()) {
-        today.setDate(today.getDate() + 1)
+    const date = new Date();
+
+    if(date.getUTCHours() < 15) {
+        return new Date(
+            Date.UTC(date.getUTCFullYear(), date.getUTCMonth(),
+                     date.getUTCDate(), 15)
+        ).toString();
+    } else {
+        return new Date(
+            Date.UTC(date.getUTCFullYear(), date.getUTCMonth(),
+                     date.getUTCDate(), 15) +
+            60000 * 60 * 24
+        ).toString();
     }
-    today.setUTCHours(15, 0, 0, 0);
-    return today.toString();
 }
 
 const MyButton = () => {
