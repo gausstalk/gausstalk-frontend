@@ -18,7 +18,7 @@ const getTodayMidnight = () => {
 const MyButton = () => {
     let token = window.sessionStorage.getItem('gaussAccessToken');
     let registerExists = false;
-    axios.get(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/one-on-one'), {
+    axios.get(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/meeting/v1/'), {
         headers: {Authorization: `Bearer ${token}`},
         withCredentials: true
     }).then((res) => {
@@ -35,30 +35,25 @@ const MyButton = () => {
         let message = "Registration failed. Please try again later."
         let registerDone = false;
         let token = window.sessionStorage.getItem('gaussAccessToken');
-        try {
-            await axios.post(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/one-on-one'), {
-                headers: {Authorization: `Bearer ${token}`},
-                withCredentials: true
-            }).then((res) => {
-                if (res.status === 200) {
-                    success = "success"
-                    message = "Registration success"
-                    registerDone = true;
-                }
-            }).catch((error) => {
-                console.log(error);
-            })
-        } catch (error) {
-            console.log(error)
-        }
+        await axios.put(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/meeting/v1/'), {
+            headers: {Authorization: `Bearer ${token}`},
+            withCredentials: true
+        }).then((res) => {
+            if (res.status === 200) {
+                success = "success"
+                message = "Registration success"
+                registerDone = true;
+            }
+        }).catch((error) => {
+            console.log(error);
+        })
+
 
         enqueueSnackbar(message, {
             variant: success
         });
         setRegistered(registerDone);
     };
-
-    //TODO: get registered status
 
     if (!registered) {
         return <Button variant="contained" onClick={register}>Register</Button>
@@ -79,13 +74,13 @@ function OneOnOne() {
                         <div className={"section-copy"}>
                             <h1 className={"section-h1"}>1:1</h1>
                             <p>
-                                Every end of the day,<br></br>random 1:1’s are matched and sent to you via email!
+                                Every end of the day,<br></br>random 1:1’s are matched and sent to you via email!<br></br>(All 1:1 are matched at 9:00AM KST)
                             </p>
                             <MyButton></MyButton>
                         </div>
                         <div className={"countdown-container"}>
                             <WorkingFlipDate value={getTodayMidnight()} />
-                            <p className={"countdown-detail"}>left until application deadline</p>
+                            <p className={"countdown-detail"}>left until registration ends</p>
                         </div>
                     </div>
                 </div>
