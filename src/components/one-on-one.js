@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Button} from "@mui/material";
 import urlJoin from 'url-join';
 import axios from "axios";
@@ -17,18 +17,26 @@ const getTodayMidnight = () => {
 
 const MyButton = () => {
     let token = window.sessionStorage.getItem('gaussAccessToken');
-    let registerExists = false;
-    axios.get(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/meeting/v1/'), {
-        headers: {Authorization: `Bearer ${token}`},
-        withCredentials: true
-    }).then((res) => {
-        if (res.status === 200) {
-            registerExists = true;
+
+    useEffect(() => {
+        async function fetchData() {
+            const response = await axios.get(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/meeting/v1/'), {
+                headers: {Authorization: `Bearer ${token}`},
+                withCredentials: true
+            })
+            return response
         }
-    }).catch((error) => {
-        console.log(error);
-    })
-    const [registered, setRegistered] = useState(registerExists);
+        fetchData().then((res) => {
+            if (res.status === 200) {
+                setRegistered(true);
+            }
+            else {
+                setRegistered(false);
+            }
+        });
+    }, [])
+
+    const [registered, setRegistered] = useState();
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const register = async () => {
         let success = "error";
@@ -47,8 +55,6 @@ const MyButton = () => {
         }).catch((error) => {
             console.log(error);
         })
-
-
         enqueueSnackbar(message, {
             variant: success
         });
