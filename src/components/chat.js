@@ -227,7 +227,7 @@ class Chat extends React.Component {
 
   scrollToBottom = () => {
     let element = this.messagesEndRef.current
-    element.scroll({ top: element.scrollHeight, behavior: "smooth"});
+    element.scroll({ top: element.scrollHeight});
   }
 
   updateChatAreaScrollPosition = (event) => {
