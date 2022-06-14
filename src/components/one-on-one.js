@@ -34,16 +34,16 @@ const MyButton = () => {
                 setRegistered(false);
             }
         });
-    }, [])
+    }, [token]);
 
     const [registered, setRegistered] = useState();
-    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+    const { enqueueSnackbar } = useSnackbar();
     const register = async () => {
         let success = "error";
         let message = "Registration failed. Please try again later."
         let registerDone = false;
         let token = window.sessionStorage.getItem('gaussAccessToken');
-        await axios.put(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/meeting/v1/'), {
+        await axios.put(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/meeting/v1/'), {}, {
             headers: {Authorization: `Bearer ${token}`},
             withCredentials: true
         }).then((res) => {
