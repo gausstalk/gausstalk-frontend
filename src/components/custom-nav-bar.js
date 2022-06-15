@@ -74,13 +74,14 @@ class CustomNavbar extends React.Component {
             <LinkContainer to='/'>
               <Navbar.Brand>
                 <img
-                    alt=""
-                    src={logo192}
-                    width="30"
-                    height="30"
-                    className="d-inline-block align-top"
-                />{' '}
-                Gauss Talk
+                  alt=""
+                  src={logo192}
+                  width="20"
+                  height="20"
+                  className="d-inline-block center"
+                  style={{'marginBottom': 3}}
+                />
+                <span style={{'marginLeft': 8}}>Gauss Talk</span>
               </Navbar.Brand>
             </LinkContainer>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />

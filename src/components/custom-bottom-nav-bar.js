@@ -13,11 +13,11 @@ class CustomBottomNavbar extends React.Component {
                             <img
                                 alt=""
                                 src={logo192}
-                                width="30"
-                                height="30"
-                                className="d-inline-block align-top"
-                            />{' '}
-                            <span id={"company-name"}>© 2022 GaussLabs, Inc.</span>
+                                width="25"
+                                height="25"
+                                className="d-inline-block center"
+                            />
+                            <span id={"company-name"}>© 2022 Gauss Labs, Inc.</span>
                         </Navbar.Brand>
                         <Nav className="me-auto">
                         </Nav>

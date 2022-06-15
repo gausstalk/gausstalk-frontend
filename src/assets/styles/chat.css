@@ -111,7 +111,8 @@ div.chat-bubble-me {
 }
 
 #company-name {
-    font-size: 10px;
+    font-size: 0.75em;
+    margin-left: 1em;
 }
 
 #send-button {
