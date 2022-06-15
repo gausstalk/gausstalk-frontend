@@ -1,6 +1,7 @@
 import React from 'react';
 import {Container, Nav, Navbar} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
+import { LinkContainer } from 'react-router-bootstrap';
 import axios from 'axios';
 import urlJoin from 'url-join';
 
@@ -70,16 +71,18 @@ class CustomNavbar extends React.Component {
       <>
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" sticky={"top"}>
           <Container>
-            <Navbar.Brand herf="/#home">
-              <img
-                  alt=""
-                  src={logo192}
-                  width="30"
-                  height="30"
-                  className="d-inline-block align-top"
-              />{' '}
-              Gauss Talk
-            </Navbar.Brand>
+            <LinkContainer to='/'>
+              <Navbar.Brand>
+                <img
+                    alt=""
+                    src={logo192}
+                    width="30"
+                    height="30"
+                    className="d-inline-block align-top"
+                />{' '}
+                Gauss Talk
+              </Navbar.Brand>
+            </LinkContainer>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
               <this.navlinks/>
