@@ -14,7 +14,7 @@
     flex-direction: column;
     font-family: "SanFrancisco";
     margin-bottom: 10px;
-    height: calc(100% - 45px - 1em);
+    height: calc(100% - 45px - 10px);
     box-sizing: border-box;
     overflow: auto;
     padding: 15px;
