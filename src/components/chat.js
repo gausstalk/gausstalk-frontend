@@ -210,6 +210,10 @@ class Chat extends React.Component {
     this.scrollToBottom();
   }
 
+  componentWillUnmount() {
+    this.ws.close();
+  }
+
   sendMessage = (event) => {
     let input = document.getElementById("chat-input");
     if(input.value) {
