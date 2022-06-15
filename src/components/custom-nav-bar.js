@@ -8,29 +8,7 @@ import logo192 from '../assets/images/logo192.png';
 
 
 class CustomNavbar extends React.Component {
-  navlinks(props) {
-    let token = window.sessionStorage.getItem('gaussAccessToken');
-    if(token === null) {
-      return (
-          <>
-            <Nav.Link href="/#about">About</Nav.Link>
-            <Nav.Link href="/#features">Features</Nav.Link>
-            <Nav.Link as={Link} to={"/contact"}>Contact Us</Nav.Link>
-          </>
-      )
-    }
-    else {
-      return (
-          <>
-              <Nav.Link as={Link} to="/chat">Chat</Nav.Link>
-              <Nav.Link as={Link} to="/one-on-one">1:1</Nav.Link>
-              <Nav.Link as={Link} to="/lunch-together">Lunch Together</Nav.Link>
-          </>
-      )
-    }
-  }
-
-  loginLogoutLink(props) {
+  navlinks() {
     let token = window.sessionStorage.getItem('gaussAccessToken');
 
     axios.get(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/user/v1/auth/'), {
@@ -53,11 +31,38 @@ class CustomNavbar extends React.Component {
 
     let redirectUrl = urlJoin(process.env.REACT_APP_FRONTEND_BASE_URL, 'auth');
     let loginUrl = `https://login.microsoftonline.com/cfcd9b87-7c5a-4042-9129-abee6253febe/oauth2/v2.0/authorize?client_id=7fc37514-c400-4b28-a6d6-e19a9ae981b6&response_type=code&redirect_uri=${redirectUrl}&scope=User.read`;
-    return (
-      <Nav.Link id='login-logout-link' href={loginUrl}>
-        Login
-      </Nav.Link>
-    );
+    if(token === null) {
+      return (
+        <>
+          <Nav className='me-auto'>
+            <Nav.Link href="/#about">About</Nav.Link>
+            <Nav.Link href="/#features">Features</Nav.Link>
+            <Nav.Link as={Link} to={"/contact"}>Contact Us</Nav.Link>
+          </Nav>
+          <Nav>
+            <Nav.Link id='login-logout-link' href={loginUrl}>
+              Login
+            </Nav.Link>
+          </Nav>
+        </>
+      )
+    }
+    else {
+      return (
+        <>
+          <Nav className='me-auto'>
+            <Nav.Link as={Link} to="/chat">Chat</Nav.Link>
+            <Nav.Link as={Link} to="/one-on-one">1:1</Nav.Link>
+            <Nav.Link as={Link} to="/lunch-together">Lunch Together</Nav.Link>
+          </Nav>
+          <Nav>
+            <Nav.Link id='login-logout-link' href={loginUrl}>
+              Login
+            </Nav.Link>
+          </Nav>
+        </>
+      )
+    }
   }
 
   render() {
@@ -77,12 +82,7 @@ class CustomNavbar extends React.Component {
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
-              <Nav className="me-auto">
-                <this.navlinks/>
-              </Nav>
-              <Nav>
-                <this.loginLogoutLink/>
-              </Nav>
+              <this.navlinks/>
             </Navbar.Collapse>
           </Container>
         </Navbar>
