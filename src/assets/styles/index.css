@@ -13,5 +13,5 @@ body {
 }
 
 .navbar {
-  height: 3.5em;
+  min-height: 3.5em;
 }
