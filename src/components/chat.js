@@ -251,9 +251,7 @@ class Chat extends React.Component {
       <>
         <CustomNavbar />
         <div className='chat-frame'>
-          <div>
-            <div className='chat-area' id={'chat-area'} ref={this.messagesEndRef} onScroll={this.updateChatAreaScrollPosition}/>
-          </div>
+          <div className='chat-area' id={'chat-area'} ref={this.messagesEndRef} onScroll={this.updateChatAreaScrollPosition}/>
           <form action='src/index' onSubmit={this.sendMessage} onKeyPress={this.onCheckEnter}>
             <InputGroup className="mb-3">
               <FormControl
