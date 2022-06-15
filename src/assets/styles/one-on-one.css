@@ -3,7 +3,7 @@
 }
 
 #one-on-one-section {
-    height: 100vh;
+    height: calc(100% - 3.5em);
     width: 100vw;
     display: flex;
     align-items: center;
