@@ -29,7 +29,7 @@ const Logout = () => {
       withCredentials: true,
     }).then(async function (response) {
       console.log('Logout succeeded!!');
-      await timeout(1000);
+      await timeout(500);
       navigate('/');
     }).catch(function (error) {
       console.log('Logout failed!!');
