@@ -4,10 +4,6 @@ import urlJoin from 'url-join';
 import '../assets/styles/loading.css';
 
 
-function timeout(delay: number) {
-    return new Promise( res => setTimeout(res, delay) );
-}
-
 const Auth = () => {
   const [searchParams, ] = useSearchParams();
   const code = searchParams.get('code');
@@ -24,8 +20,6 @@ const Auth = () => {
       withCredentials: true,
     })
     .then(async function (res) {
-      await timeout(500);
-
       try {
         const response = await axios.get(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/user/v1/user/'), {
           headers: { Authorization: `Bearer ${res.data.ms_access_token}` },
