@@ -9,30 +9,32 @@ import logo192 from '../assets/images/logo192.png';
 
 
 class CustomNavbar extends React.Component {
-  navlinks() {
-    let token = window.sessionStorage.getItem('gaussAccessToken');
+  constructor() {
+    super();
+    this.state = {
+      token: window.sessionStorage.getItem('gaussAccessToken'),
+    };
+  }
 
+  componentDidMount() {
+    let self = this;
     axios.get(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/user/v1/auth/'), {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${self.state.token}` },
       withCredentials: true,
     }).then(function (response) {
-      // The following should be changed later. It's kinda hard-coded.
-      let loginLogoutLink = document.getElementById('login-logout-link');
-      loginLogoutLink.removeAttribute('data-rr-ui-event-key');
-      loginLogoutLink.innerHTML = 'Logout';
-      loginLogoutLink.setAttribute('href', '/logout');
-
-      let gaussAccessToken = response.data['gauss_access_token'];
-      window.sessionStorage.setItem('gaussAccessToken', gaussAccessToken);
-      window.sessionStorage.setItem('mail', response.data.mail);
-      window.sessionStorage.setItem('name', response.data.name);
+      window.sessionStorage.setItem('gaussAccessToken', response.data.gauss_access_token);
+      self.setState({
+        token: response.data.gauss_access_token,
+      });
     }).catch(function (error) {
       // error
     });
+  }
 
+  navlinks(props) {
     let redirectUrl = urlJoin(process.env.REACT_APP_FRONTEND_BASE_URL, 'auth');
     let loginUrl = `https://login.microsoftonline.com/cfcd9b87-7c5a-4042-9129-abee6253febe/oauth2/v2.0/authorize?client_id=7fc37514-c400-4b28-a6d6-e19a9ae981b6&response_type=code&redirect_uri=${redirectUrl}&scope=User.read`;
-    if(token === null) {
+    if(props.token === null) {
       return (
         <>
           <Nav className='me-auto'>
@@ -57,8 +59,8 @@ class CustomNavbar extends React.Component {
             <Nav.Link as={Link} to="/lunch-together">Lunch Together</Nav.Link>
           </Nav>
           <Nav>
-            <Nav.Link id='login-logout-link' href={loginUrl}>
-              Login
+            <Nav.Link id='login-logout-link' as={Link} to='/logout'>
+              Logout
             </Nav.Link>
           </Nav>
         </>
@@ -86,7 +88,7 @@ class CustomNavbar extends React.Component {
             </LinkContainer>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
-              <this.navlinks/>
+              <this.navlinks token={this.state.token}/>
             </Navbar.Collapse>
           </Container>
         </Navbar>
