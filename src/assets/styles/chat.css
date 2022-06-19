@@ -1,6 +1,6 @@
 
 .chat-frame {
-    padding: 1em;
+    padding: 0em 1em 1em 1em;
     width: 100%;
     height: calc(100% - 3.5em);
     box-sizing: border-box;
