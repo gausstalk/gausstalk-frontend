@@ -19,7 +19,6 @@ header, section, div, h1, h2, h3, h4, h5, h6, p, a {
     padding: 0;
     border: 0;
     font-size: 100%;
-    vertical-align: baseline;
 }
 
 div {
@@ -128,12 +127,8 @@ a {
     border-radius: 0;
     background-color: #fff;
     color: #273245;
+    max-height: 100%;
 }
-
-.section-copy {
-    padding: 60px 0 40px;
-}
-
 
 .section-solid .section-img-wrapper {
     padding-bottom: 0;
@@ -156,6 +151,7 @@ a {
 }
 
 .section-copy {
+    padding: 60px 0px 40px 0px;
     width: 550px;
 }
 
@@ -219,7 +215,7 @@ a {
     }
 
     .section-copy {
-        width: 350px;
+        width: 100%;
     }
 
     .section-img-wrapper {
