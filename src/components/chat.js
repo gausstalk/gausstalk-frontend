@@ -167,6 +167,26 @@ class Chat extends React.Component {
     };
   }
 
+  componentDidMount() {
+    let self = this, token = window.sessionStorage.getItem('gaussAccessToken');
+    axios.get(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/user/v1/auth/'), {
+      headers: { Authorization: `Bearer ${token}` },
+      withCredentials: true,
+    }).then(function (response) {
+      window.sessionStorage.setItem('mail', response.data.mail);
+      window.sessionStorage.setItem('name', response.data.name);
+      window.sessionStorage.setItem('gaussAccessToken', response.data.gauss_access_token);
+      self.setState({
+        mail: response.data.mail,
+        name: response.data.name,
+      });
+      self.getPreviousMessages();
+      self.scrollToBottom();
+    }).catch(function (error) {
+      // error
+    });
+  }
+
   setPreviousUserAndTime(previousUser, previousTime) {
     this.previousUser = previousUser;
     this.previousTime = previousTime;
@@ -176,10 +196,10 @@ class Chat extends React.Component {
     return [this.previousUser, this.previousTime];
   }
 
-  getPreviousMessages(state) {
+  getPreviousMessages() {
     const chatUrl = urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/chat/v1/')
     let token = window.sessionStorage.getItem('gaussAccessToken');
-    let mail = state.mail;
+    let mail = window.sessionStorage.getItem('mail');
     try {
       if (token === null) {
         return;
@@ -203,11 +223,6 @@ class Chat extends React.Component {
     } catch (error) {
       console.log('Unable to retrieve messages.', error);
     }
-  }
-
-  componentDidMount() {
-    this.getPreviousMessages(this.state);
-    this.scrollToBottom();
   }
 
   componentWillUnmount() {

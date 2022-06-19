@@ -22,6 +22,8 @@ class CustomNavbar extends React.Component {
       headers: { Authorization: `Bearer ${self.state.token}` },
       withCredentials: true,
     }).then(function (response) {
+      window.sessionStorage.setItem('mail', response.data.mail);
+      window.sessionStorage.setItem('name', response.data.name);
       window.sessionStorage.setItem('gaussAccessToken', response.data.gauss_access_token);
       self.setState({
         token: response.data.gauss_access_token,
