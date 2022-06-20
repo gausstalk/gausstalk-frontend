@@ -2,8 +2,8 @@ import React, {useState, useEffect} from 'react';
 import {Button} from "@mui/material";
 import urlJoin from 'url-join';
 import axios from "axios";
-import CustomNavbar from "./custom-nav-bar";
-import {WorkingFlipDate} from './countdown'
+import CustomNavbar from "../components/custom-nav-bar";
+import {WorkingFlipDate} from '../components/countdown'
 import '../assets/styles/one-on-one.css'
 
 import { SnackbarProvider, useSnackbar} from 'notistack';

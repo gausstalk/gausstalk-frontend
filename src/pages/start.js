@@ -2,11 +2,11 @@ import React from 'react';
 import Button from '@mui/material/Button';
 import urlJoin from 'url-join';
 
-import CustomNavbar from './custom-nav-bar.js';
-import CustomBottomNavbar from './custom-bottom-nav-bar.js';
+import CustomNavbar from '../components/custom-nav-bar.js';
+import CustomBottomNavbar from '../components/custom-bottom-nav-bar.js';
 
 import '../assets/styles/start.css'
-import start_img_1 from  '../assets/images/start1.png'
+import start_img_1 from '../assets/images/start1.png'
 import company_chat from '../assets/images/company-chat.png'
 import lunch_together from '../assets/images/lunch-together.png'
 import one_on_one from '../assets/images/one-on-one.png'

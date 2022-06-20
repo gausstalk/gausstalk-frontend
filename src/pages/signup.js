@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 
-import CustomNavbar from './custom-nav-bar.js';
+import CustomNavbar from '../components/custom-nav-bar.js';
 import '../assets/styles/signup.css';
 
 
