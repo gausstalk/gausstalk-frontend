@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import urlJoin from 'url-join';
 
-import CustomNavbar from './custom-nav-bar';
+import CustomNavbar from '../components/custom-nav-bar';
 
 
 export default function CreateUser() {

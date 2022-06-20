@@ -6,7 +6,7 @@ import urlJoin from 'url-join';
 import axios from "axios";
 
 import '../assets/styles/chat.css'
-import CustomNavbar from './custom-nav-bar.js';
+import CustomNavbar from '../components/custom-nav-bar.js';
 
 function hexToRGB(hex) {
   hex = hex.substring(1);
