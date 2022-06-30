@@ -13,6 +13,7 @@ import Signup from './pages/signup.js';
 import CreateUser from './pages/create-user.js';
 import OneOnOne from './pages/one-on-one.js'
 import Construction from './components/construction.js'
+import LunchTogetherForm from './pages/lunch-together-form.js';
 import 'bootstrap/dist/css/bootstrap.css';
 import './assets/styles/index.css';
 
@@ -29,6 +30,7 @@ const Root = () => (
             <Route exact path="/one-on-one" element={<OneOnOne/>}></Route>
             <Route exact path="/signup/create-user" element={<CreateUser />} />
             <Route exact path={"/lunch-together"} element={<Construction/>}/>
+            <Route exact path="/lunch-together/form" element={<LunchTogetherForm/>}/>
         </Routes>
     </Router>
 );
