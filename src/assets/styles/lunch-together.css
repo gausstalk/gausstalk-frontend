@@ -1,0 +1,34 @@
+#lunch-together-form {
+  width: 100%;
+  height: 100%;
+}
+
+#map {
+  width: 100%;
+  height: 400px;
+}
+
+#search-places {
+  margin-top: 1em;
+}
+
+#search-places>button {
+  margin-left: 1em;
+}
+
+#appointment-form * tr {
+  height: 3em;
+}
+
+#appointment-form>button {
+  margin-top: 1em;
+}
+
+#appointment-form * tr>td:nth-of-type(1) {
+  text-align: right;
+  padding-right: 1em;
+}
+
+#appointment-form * input {
+  width: 12em;
+}
