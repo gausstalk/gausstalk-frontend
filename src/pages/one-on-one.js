@@ -72,11 +72,32 @@ const MyButton = () => {
         setRegistered(registerDone);
     };
 
+    const unregister = async () => {
+        let success = "error";
+        let message = "Unregistration failed. Please try again later.";
+        let token = window.sessionStorage.getItem('gaussAccessToken');
+        await axios.delete(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/meeting/v1/'), {
+            headers: {Authorization: `Bearer ${token}`},
+            withCredentials: true,
+        }).then((res) => {
+            if (res.status === 200) {
+                success = "success";
+                message = "Unregistration success";
+                setRegistered(false);
+            }
+        }).catch((error) => {
+            console.log(error);
+        })
+        enqueueSnackbar(message, {
+            variant: success,
+        });
+    };
+
     if (!registered) {
         return <Button variant="contained" onClick={register}>Register</Button>
     }
     else {
-        return <Button variant={"contained"} disabled>You have already registered! <br></br>Come back tomorrow</Button>
+        return <Button variant="contained" onClick={unregister}>You have already registered!<br/>Click to unregister.</Button>
     }
 }
 
