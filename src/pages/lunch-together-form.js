@@ -15,11 +15,13 @@ limitations under the License.
 
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 import urlJoin from 'url-join';
+import { Button, ButtonGroup, Input } from '@mui/material';
 
 import CustomNavbar from '../components/custom-nav-bar';
+import { ReactComponent as ArrowBack } from '../assets/images/arrow-back.svg';
 
 import '../assets/styles/lunch-together.css';
 
@@ -28,8 +30,9 @@ const LunchTogetherForm = () => {
   const { kakao } = window;
   const datetimeRef = useRef(null);
   const [map, setMap] = useState(null);
+  const [placeButtons, setPlaceButtons] = useState(null);
   const [selectedRestaurantId, setSelectedRestaurantId] = useState(null);
-  const [appointmentTitle, setAppointmentTitle] = useState(null);
+  const [appointmentTitle, setAppointmentTitle] = useState('');
   let navigate = useNavigate();
 
   // 마커를 담을 배열입니다
@@ -91,7 +94,7 @@ const LunchTogetherForm = () => {
     }
   }
 
-  function mouseover(itemEl, marker, restaurantId, title) {
+  function mouseover(marker, title) {
     kakao.maps.event.addListener(marker, 'mouseover', function () {
       displayInfowindow(marker, title);
     });
@@ -99,30 +102,15 @@ const LunchTogetherForm = () => {
     kakao.maps.event.addListener(marker, 'mouseout', function () {
       infowindow.close();
     });
-
-    itemEl.onmouseover = function () {
-      displayInfowindow(marker, title);
-    };
-
-    itemEl.onmouseout = function () {
-      infowindow.close();
-    };
-
-    itemEl.onclick = function () {
-      setSelectedRestaurantId(restaurantId);
-      setAppointmentTitle(title);
-    }
   }
 
   // 검색 결과 목록과 마커를 표출하는 함수입니다
   function displayPlaces(places) {
-    var listEl = document.getElementById('placesList'),
-      menuEl = document.getElementById('menu_wrap'),
-      fragment = document.createDocumentFragment(),
-      bounds = new kakao.maps.LatLngBounds();
+    var bounds = new kakao.maps.LatLngBounds();
+    let tmpPlaceButtons = [];
 
     // 검색 결과 목록에 추가된 항목들을 제거합니다
-    removeAllChildNods(listEl);
+    setPlaceButtons([]);
 
     // 지도에 표시되고 있는 마커를 제거합니다
     removeMarker();
@@ -131,7 +119,7 @@ const LunchTogetherForm = () => {
       // 마커를 생성하고 지도에 표시합니다
       var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x),
         marker = addMarker(placePosition, i),
-        itemEl = getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
+        itemEl = getListItem(places[i], marker); // 검색 결과 항목 Element를 생성합니다
 
       // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
       // LatLngBounds 객체에 좌표를 추가합니다
@@ -140,41 +128,50 @@ const LunchTogetherForm = () => {
       // 마커와 검색결과 항목에 mouseover 했을때
       // 해당 장소에 인포윈도우에 장소명을 표시합니다
       // mouseout 했을 때는 인포윈도우를 닫습니다
-      mouseover(itemEl, marker, places[i].id, places[i].place_name);
+      mouseover(marker, places[i].place_name);
 
-      fragment.appendChild(itemEl);
+      tmpPlaceButtons.push(itemEl);
     }
-
-    // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
-    listEl.appendChild(fragment);
-    menuEl.scrollTop = 0;
 
     // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
     map.setBounds(bounds);
+
+    // Show placeButtons when searching.
+    console.log(tmpPlaceButtons);
+    setPlaceButtons(tmpPlaceButtons);
+  }
+
+  function clickRestaurant(place) {
+    console.log(place);
+    setSelectedRestaurantId(place.id);
+    setAppointmentTitle(place.place_name);
   }
 
   // 검색결과 항목을 Element로 반환하는 함수입니다
-  function getListItem(index, places) {
-
-    var el = document.createElement('li'),
-      itemStr = '<span class="markerbg marker_' + (index + 1) + '"></span>' +
-        '<div class="info">' +
-        '   <h5>' + places.place_name + '</h5>';
-
-    if (places.road_address_name) {
-      itemStr += '    <span>' + places.road_address_name + '</span>' +
-        '   <span class="jibun gray">' + places.address_name + '</span>';
-    } else {
-      itemStr += '    <span>' + places.address_name + '</span>';
+  function getListItem(place, marker) {
+    let items = [];
+    items.push(<p key='place-name'>{place.place_name}</p>);
+    if (place.road_address_name) {
+      items.push(<p key='place-road-address'>{place.road_address_name}</p>);
     }
-
-    itemStr += '  <span class="tel">' + places.phone + '</span>' +
-      '</div>';
-
-    el.innerHTML = itemStr;
-    el.className = 'item';
-
-    return el;
+    else if (place.address_name) {
+      items.push(<p key='place-old-address'>{place.address_name}</p>);
+    }
+    console.log(items);
+    return (
+      <Button
+        key={place.id}
+        onClick={() => clickRestaurant(place)}
+        onMouseOver={() => displayInfowindow(marker, place.place_name)}
+        onMouseOut={infowindow.close()}
+      >
+        <ul>
+          <li key='place-name'>{place.place_name}</li>
+          {place.road_address_name && <li key='place-road-address'>{place.road_address_name}</li>}
+          {place.address_name && <li key='place-address'>{place.address_name}</li>}
+        </ul>
+      </Button>
+    );
   }
 
   // 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
@@ -246,13 +243,6 @@ const LunchTogetherForm = () => {
     infowindow.open(map, marker);
   }
 
-  // 검색결과 목록의 자식 Element를 제거하는 함수입니다
-  function removeAllChildNods(el) {
-    while (el.hasChildNodes()) {
-      el.removeChild(el.lastChild);
-    }
-  }
-
   function createAppointment(event) {
     event.preventDefault();
 
@@ -272,7 +262,7 @@ const LunchTogetherForm = () => {
       headers: { Authorization: `Bearer ${window.sessionStorage.getItem('gaussAccessToken')}` },
       withCredentials: true,
     }).then((response) => {
-      navigate('/lunch-together');
+      navigate('..');
     }).catch((error) => {
       // error
     });
@@ -281,45 +271,45 @@ const LunchTogetherForm = () => {
   return (
     <>
       <CustomNavbar />
-      <div id="lunch-together-form">
-        <div id="map" />
-        <div id="menu_wrap" className="bg_white">
-          <div className="option">
-            <div>
-              <form onSubmit={searchPlaces} id='search-places'>
-                <input type="text" id="keyword" />
-                <button type="submit">Search</button>
-              </form>
-            </div>
+      <div id='lunch-together-form-frame'>
+        <div id="lunch-together-form">
+          <Link id='arrow-back-button' to='..'><ArrowBack /></Link>
+          <div id="map" />
+          <div id="menu-wrap">
+            <form onSubmit={searchPlaces} id='search-places'>
+              <Input id="keyword" />
+              <Button type="submit" variant={"contained"}>Search</Button>
+            </form>
+            <div id="pagination" />
+            <ButtonGroup id="place-list" variant='outlined' orientation='vertical' aria-label="vertical outlined button group">
+              {placeButtons}
+            </ButtonGroup>
           </div>
-          <hr />
-          <ul id="placesList"></ul>
-          <div id="pagination"></div>
+          <form onSubmit={createAppointment} id='appointment-form'>
+            <input type="hidden" name="restaurantId" defaultValue={selectedRestaurantId} />
+            <table>
+              <tbody>
+                <tr>
+                  <td>Title</td>
+                  <td><Input name="title" value={appointmentTitle} required /></td>
+                </tr>
+                <tr>
+                  <td>Date & Time</td>
+                  <td><Input inputRef={datetimeRef} type="datetime-local" name="datetime" required /></td>
+                </tr>
+                <tr>
+                  <td># Participants</td>
+                  <td><Input type="number" name="nParticipants" defaultValue="2" min="2" required /></td>
+                </tr>
+                <tr>
+                  <td>Meeting Point</td>
+                  <td><Input name="meetingPoint" /></td>
+                </tr>
+              </tbody>
+            </table>
+            <Button type="submit" variant={"contained"}>Register</Button>
+          </form>
         </div>
-        <form onSubmit={createAppointment} id='appointment-form'>
-          <input type="hidden" name="restaurantId" defaultValue={selectedRestaurantId} />
-          <table>
-            <tbody>
-              <tr>
-                <td>Title</td>
-                <td><input type="text" name="title" defaultValue={appointmentTitle} required /></td>
-              </tr>
-              <tr>
-                <td>Date & Time</td>
-                <td><input ref={datetimeRef} type="datetime-local" name="datetime" required /></td>
-              </tr>
-              <tr>
-                <td>Number of Participants</td>
-                <td><input type="number" name="nParticipants" defaultValue="2" min="2" required /></td>
-              </tr>
-              <tr>
-                <td>Meeting Point</td>
-                <td><input type="text" name="meetingPoint" /></td>
-              </tr>
-            </tbody>
-          </table>
-          <button type="submit">Register</button>
-        </form>
       </div>
     </>
   );
