@@ -1,6 +1,6 @@
 import React from 'react';
-import {Container, Nav, Navbar} from 'react-bootstrap';
-import {Link} from 'react-router-dom';
+import { Container, Nav, Navbar } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
 import axios from 'axios';
 import urlJoin from 'url-join';
@@ -36,7 +36,7 @@ class CustomNavbar extends React.Component {
   navlinks(props) {
     let redirectUrl = urlJoin(process.env.REACT_APP_FRONTEND_BASE_URL, 'auth');
     let loginUrl = `https://login.microsoftonline.com/cfcd9b87-7c5a-4042-9129-abee6253febe/oauth2/v2.0/authorize?client_id=7fc37514-c400-4b28-a6d6-e19a9ae981b6&response_type=code&redirect_uri=${redirectUrl}&scope=User.read`;
-    if(props.token === null) {
+    if (props.token === null) {
       return (
         <>
           <Nav className='me-auto'>
@@ -59,6 +59,7 @@ class CustomNavbar extends React.Component {
             <Nav.Link as={Link} to="/chat">Chat</Nav.Link>
             <Nav.Link as={Link} to="/one-on-one">1:1</Nav.Link>
             <Nav.Link as={Link} to="/lunch-together">Lunch Together</Nav.Link>
+            <Nav.Link as={Link} to="/gausselin">Gausselin Guide</Nav.Link>
           </Nav>
           <Nav>
             <Nav.Link id='login-logout-link' as={Link} to='/logout'>
@@ -83,14 +84,14 @@ class CustomNavbar extends React.Component {
                   width="20"
                   height="20"
                   className="d-inline-block center"
-                  style={{'marginBottom': 3}}
+                  style={{ 'marginBottom': 3 }}
                 />
-                <span style={{'marginLeft': 8}}>Gauss Talk</span>
+                <span style={{ 'marginLeft': 8 }}>Gauss Talk</span>
               </Navbar.Brand>
             </LinkContainer>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
-              <this.navlinks token={this.state.token}/>
+              <this.navlinks token={this.state.token} />
             </Navbar.Collapse>
           </Container>
         </Navbar>
