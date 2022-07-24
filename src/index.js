@@ -16,6 +16,8 @@ import Construction from './components/construction.js'
 import LunchTogether from './pages/lunch-together.js';
 import LunchTogetherForm from './pages/lunch-together-form.js';
 import Gausselin from './pages/gausselin.js';
+import GausselinReviews from './pages/gausselin-reviews.js';
+import GausselinReviewForm from './pages/gausselin-review-form.js';
 import 'bootstrap/dist/css/bootstrap.css';
 import './assets/styles/index.css';
 
@@ -35,7 +37,10 @@ const Root = () => (
         <Route path="" element={<Construction />} />
         <Route path="form" element={<LunchTogetherForm />} />
       </Route>
-      <Route exact path="/gausselin" element={<Gausselin />} />
+      <Route path="/gausselin" element={<Gausselin />}>
+        <Route path="" element={<GausselinReviews />} />
+        <Route path="form" element={<GausselinReviewForm />} />
+      </Route>
     </Routes>
   </Router>
 );
