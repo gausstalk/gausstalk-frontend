@@ -8,6 +8,7 @@ import CustomNavbar from '../components/custom-nav-bar';
 import MapSearch from '../components/map-search.js';
 import { ReactComponent as ArrowBack } from '../assets/images/arrow-back.svg';
 import '../assets/styles/lunch-together.css';
+import '../assets/styles/register-form.css';
 
 
 const LunchTogetherForm = () => {
@@ -52,8 +53,8 @@ const LunchTogetherForm = () => {
   return (
     <>
       <CustomNavbar />
-      <div id='lunch-together-form-frame'>
-        <div id="lunch-together-form">
+      <div id='register-form-frame'>
+        <div id='register-form'>
           <Link id='arrow-back-button' to='..'><ArrowBack /></Link>
           <MapSearch setSelectedRestaurantId={setSelectedRestaurantId} setSelectedRestaurantName={setAppointmentTitle} />
           <form onSubmit={createAppointment} id='appointment-form'>

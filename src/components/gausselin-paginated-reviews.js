@@ -3,11 +3,13 @@ import axios from 'axios';
 import urlJoin from 'url-join';
 import GausselinReviewPage from './gausselin-review-page';
 import { Button, Pagination } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 
 function GausselinPaginatedReviews({ itemsPerPage }) {
   const [page, setPage] = useState(1);
   const [pageCount, setPageCount] = useState(0);
+  const navigate = useNavigate();
 
   const token = window.sessionStorage.getItem('gaussAccessToken');
   const reviewCountUrl = urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/gausselin/v1/reviews/count/');
@@ -30,7 +32,7 @@ function GausselinPaginatedReviews({ itemsPerPage }) {
 
   return (
     <>
-      <Button variant='contained'>Write Review</Button>
+      <Button variant='contained' onClick={() => { navigate('./form') }}>Write Review</Button>
       <GausselinReviewPage offset={(page - 1) * itemsPerPage} limit={itemsPerPage} />
       <Pagination count={pageCount} page={page} onChange={handleChange} />
     </>
