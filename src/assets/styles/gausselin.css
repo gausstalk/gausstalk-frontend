@@ -53,3 +53,31 @@
   margin-top: 1.2em;
   padding-bottom: 1.2em;
 }
+
+#gausselin-review-form * tr {
+  height: 3em;
+}
+
+#gausselin-review-form>button {
+  margin-top: 1em;
+  float: right;
+}
+
+#gausselin-review-form * tr>td:nth-of-type(1) {
+  text-align: right;
+  padding-right: 1em;
+}
+
+#gausselin-review-form * input {
+  width: 12em;
+}
+
+#gausselin-review-form #stars-td>div {
+  display: flex;
+  flex-direction: row;
+  width: 12em;
+}
+
+#gausselin-review-form #review-td>div {
+  width: 12em;
+}
