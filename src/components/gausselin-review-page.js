@@ -62,6 +62,10 @@ const GausselinReviewPage = ({ offset, limit }) => {
                   <td>{starIcons}</td>
                 </tr>
                 <tr>
+                  <td>Date</td>
+                  <td>{new Date(review.created_datetime).toDateString()}</td>
+                </tr>
+                <tr>
                   <td>Comment</td>
                   <td>{review.comment}</td>
                 </tr>
