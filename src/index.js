@@ -14,6 +14,7 @@ import CreateUser from './pages/create-user.js';
 import OneOnOne from './pages/one-on-one.js'
 import Construction from './components/construction.js'
 import LunchTogether from './pages/lunch-together.js';
+import LunchTogetherView from './pages/lunch-together-view.js'
 import LunchTogetherForm from './pages/lunch-together-form.js';
 import Gausselin from './pages/gausselin.js';
 import GausselinReviews from './pages/gausselin-reviews.js';
@@ -34,7 +35,7 @@ const Root = () => (
       <Route exact path="/one-on-one" element={<OneOnOne />}></Route>
       <Route exact path="/signup/create-user" element={<CreateUser />} />
       <Route path="/lunch-together" element={<LunchTogether />}>
-        <Route path="" element={<Construction />} />
+        <Route path="" element={<LunchTogetherView />} />
         <Route path="form" element={<LunchTogetherForm />} />
       </Route>
       <Route path="/gausselin" element={<Gausselin />}>

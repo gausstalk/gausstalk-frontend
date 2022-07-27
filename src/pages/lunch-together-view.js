@@ -1,33 +1,55 @@
 import MultiActionAreaCard from '../components/lunch-together-card.js'
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import axios from "axios";
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import urlJoin from "url-join";
-import { CircularProgress } from '@mui/material';
+import {CircularProgress} from '@mui/material';
 import CustomNavbar from "../components/custom-nav-bar";
 import '../assets/styles/lunch-together-view.css'
 
 export default function LunchTogetherView() {
     let token = window.sessionStorage.getItem('gaussAccessToken');
-    const cardData = Array.from({ length: 6 })
     const [loading, setLoading] = React.useState(false);
-    const [items, setItems] = React.useState(cardData);
+    const [items, setItems] = React.useState([]);
     const [hasNextPage, setHasNextPage] = React.useState(true);
 
     function loadItems(startCursor = 0): Promise<Response> {
         return new Promise((resolve) => {
             let newArray = []
+            let nextPage = true;
+            let line_count = 6;
 
             setTimeout(() => {
-                for (let i = startCursor; i < startCursor + 6; i++) {
-                    const newItem = {
-                        key: i,
-                        value: `This is item ${i}`,
-                    };
-                    newArray = [...newArray, newItem];
+                async function fetchData() {
+                    // retrieve the next 6 appointments from startCursor to startCursor + 6
+                    return await axios.get(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/lunch-together/v1/appointments/'), {
+                        headers: {Authorization: `Bearer ${token}`},
+                        withCredentials: true,
+                        params: {
+                            "offset": startCursor,
+                            "limit": line_count
+                        }
+                    })
                 }
 
-                resolve({ hasNextPage: true, data: newArray });
+                fetchData().then((res) => {
+                    if (res.status === 200) {
+                        if (0 < res.data.length < line_count) {
+                            newArray = res.data;
+                            nextPage = false;
+                        } else if (res.data.length === line_count) {
+                            newArray = res.data;
+                            nextPage = true;
+                        } else {
+                            nextPage = false;
+                        }
+                    } else {
+                        console.log("failed")
+                        nextPage = false;
+                    }
+                }).then((res) => {
+                    resolve({hasNextPage: nextPage, data: newArray});
+                });
             }, 1000);
         });
     }
@@ -35,7 +57,10 @@ export default function LunchTogetherView() {
     async function loadMore() {
         setLoading(true);
         try {
-            const { data, hasNextPage: newHasNextPage } = await loadItems(
+            if (items.length === 0) {
+                return;
+            }
+            const {data, hasNextPage: newHasNextPage} = await loadItems(
                 items.length,
             );
             setItems((current) => [...current, ...data]);
@@ -47,27 +72,27 @@ export default function LunchTogetherView() {
         }
     }
 
-    /*
     useEffect(() => {
         async function fetchData() {
-            const response = await axios.get(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/lunch/v1/'), {
+            // retrieve the first 6 appointments
+            return await axios.get(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/lunch-together/v1/appointments/'), {
                 headers: {Authorization: `Bearer ${token}`},
-                withCredentials: true
+                withCredentials: true,
+                params: {"offset": 0, "limit": 6}
             })
-            return response
         }
+
         fetchData().then((res) => {
             if (res.status === 200) {
-                console.log("data retrieved")
-            }
-            else {
+                setItems(res.data)
+            } else {
                 console.log("failed")
             }
         });
     }, [token]);
 
-     */
-    const [infiniteRef, { rootRef }] = useInfiniteScroll({
+
+    const [infiniteRef, {rootRef}] = useInfiniteScroll({
         loading,
         hasNextPage,
         onLoadMore: loadMore,
@@ -76,18 +101,20 @@ export default function LunchTogetherView() {
     });
 
 
-
     return (
         <>
-            <CustomNavbar />
+            <CustomNavbar/>
             <section className={"upcoming-gatherings section"}>
                 <div className={"gathering-cards-container"} ref={rootRef}>
-                    {items.map((card, index) => (
-                        <MultiActionAreaCard key={index}></MultiActionAreaCard>
+                    {items.map((card) => (
+                        <MultiActionAreaCard key={card.id} appointment_id={card.id} datetime={card.datetime} meeting_point={card.meeting_point}
+                                             n_participants={card.n_participants} organizer_mail={card.organizer_mail}
+                                             organizer_name={card.organizer_name} restaurant_id={card.restaurant_id}
+                                             title={card.title}></MultiActionAreaCard>
                     ))}
                     {hasNextPage && (
                         <div ref={infiniteRef} className={"infinite-scroll"}>
-                            <CircularProgress />
+                            <CircularProgress/>
                         </div>
                     )}
                 </div>
