@@ -17,7 +17,7 @@ export default function LunchTogetherView() {
         return new Promise((resolve) => {
             let newArray = []
             let nextPage = true;
-            let line_count = 6;
+            let lineCount = 6;
 
             setTimeout(() => {
                 async function fetchData() {
@@ -27,17 +27,17 @@ export default function LunchTogetherView() {
                         withCredentials: true,
                         params: {
                             "offset": startCursor,
-                            "limit": line_count
+                            "limit": lineCount
                         }
                     })
                 }
 
                 fetchData().then((res) => {
                     if (res.status === 200) {
-                        if (0 < res.data.length < line_count) {
+                        if (0 < res.data.length < lineCount) {
                             newArray = res.data;
                             nextPage = false;
-                        } else if (res.data.length === line_count) {
+                        } else if (res.data.length === lineCount) {
                             newArray = res.data;
                             nextPage = true;
                         } else {
@@ -107,9 +107,9 @@ export default function LunchTogetherView() {
             <section className={"upcoming-gatherings section"}>
                 <div className={"gathering-cards-container"} ref={rootRef}>
                     {items.map((card) => (
-                        <MultiActionAreaCard key={card.id} appointment_id={card.id} datetime={card.datetime} meeting_point={card.meeting_point}
-                                             n_participants={card.n_participants} organizer_mail={card.organizer_mail}
-                                             organizer_name={card.organizer_name} restaurant_id={card.restaurant_id}
+                        <MultiActionAreaCard key={card.id} appointmentId={card.id} datetime={card.datetime} meetingPoint={card.meeting_point}
+                                             nParticipants={card.n_participants} organizerMail={card.organizer_mail}
+                                             organizerName={card.organizer_name} restaurantId={card.restaurant_id}
                                              title={card.title}></MultiActionAreaCard>
                     ))}
                     {hasNextPage && (
