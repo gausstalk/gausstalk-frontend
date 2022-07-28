@@ -16,13 +16,13 @@ const getTodayMidnight = () => {
         return new Date(
             Date.UTC(date.getUTCFullYear(), date.getUTCMonth(),
                      date.getUTCDate(), 15)
-        ).toString();
+        ).toISOString();
     } else {
         return new Date(
             Date.UTC(date.getUTCFullYear(), date.getUTCMonth(),
                      date.getUTCDate(), 15) +
             60000 * 60 * 24
-        ).toString();
+        ).toISOString();
     }
 }
 
@@ -103,6 +103,7 @@ const MyButton = () => {
 
 
 function OneOnOne() {
+  console.log(getTodayMidnight())
     return (<>
         <CustomNavbar />
             <SnackbarProvider maxSnack={3}>
