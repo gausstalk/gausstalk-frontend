@@ -43,7 +43,7 @@ const privacyPolicyEn = `
   <p><strong>Account</strong> means a unique account created for You to access our Service or parts of our Service.</p>
   </li>
   <li>
-  <p><strong>Company</strong> (referred to as either &quot;the Company&quot;, &quot;We&quot;, &quot;Us&quot; or &quot;Our&quot; in this Agreement) refers to Gausstalk, 62, Byeollae 4-ro, Namyangju-si, Gyeonggi-do.</p>
+  <p><strong>Company</strong> (referred to as either &quot;the Company&quot;, &quot;We&quot;, &quot;Us&quot; or &quot;Our&quot; in this Agreement) refers to Gauss Labs Inc., 201, Teheran-ro, Gangnam-gu, Seoul, Republic of Korea</p>
   </li>
   <li>
   <p><strong>Cookies</strong> are small files that are placed on Your computer, mobile device or any other device by a website, containing the details of Your browsing history on that website among its many uses.</p>
