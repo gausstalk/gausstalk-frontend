@@ -12,7 +12,6 @@
     border-radius: 0.25rem;
     display: flex;
     flex-direction: column;
-    font-family: "SanFrancisco";
     margin-bottom: 10px;
     height: calc(100% - 45px - 10px);
     box-sizing: border-box;
