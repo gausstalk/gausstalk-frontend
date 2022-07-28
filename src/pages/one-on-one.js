@@ -103,7 +103,6 @@ const MyButton = () => {
 
 
 function OneOnOne() {
-  console.log(getTodayMidnight())
     return (<>
         <CustomNavbar />
             <SnackbarProvider maxSnack={3}>
