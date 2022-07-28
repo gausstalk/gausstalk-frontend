@@ -54,6 +54,10 @@
   padding-bottom: 1.2em;
 }
 
+#gausselin-review-form {
+  width: 20em;
+}
+
 #gausselin-review-form * tr {
   height: 3em;
 }
@@ -64,20 +68,24 @@
 }
 
 #gausselin-review-form * tr>td:nth-of-type(1) {
+  box-sizing: border-box;
   text-align: right;
   padding-right: 1em;
 }
 
-#gausselin-review-form * input {
-  width: 12em;
+#gausselin-review-form table {
+  width: 100%;
+}
+
+#gausselin-review-form td>div {
+  width: 100%;
+}
+
+#gausselin-review-form #stars-td {
+  width: 100%;
 }
 
 #gausselin-review-form #stars-td>div {
   display: flex;
   flex-direction: row;
-  width: 12em;
-}
-
-#gausselin-review-form #review-td>div {
-  width: 12em;
 }
