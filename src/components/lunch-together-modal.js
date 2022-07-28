@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@mui/material'
 
-export default function LunchTogetherModal({isOpen, handleClick}) {
+export default function LunchTogetherModal({isOpen, handleClick, appointmentId, title, nParticipants, organizerMail, organizerName, datetime, meetingPoint, restaurantId}) {
     const [scroll, setScroll] = React.useState('paper');
 
     const descriptionElementRef = React.useRef(null);
@@ -30,7 +30,11 @@ export default function LunchTogetherModal({isOpen, handleClick}) {
                         ref={descriptionElementRef}
                         tabIndex={-1}
                     >
-                        This is some test data
+                        {title}
+                        {datetime}
+                        {organizerName}
+                        {nParticipants}
+                        {meetingPoint}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

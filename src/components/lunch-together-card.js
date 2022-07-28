@@ -8,19 +8,20 @@ import axios from "axios";
 import urlJoin from "url-join";
 
 export default function MultiActionAreaCard({
-    appointment_id,
+    appointmentId,
     datetime,
-    meeting_point,
-    n_participants,
-    organizer_mail,
-    organizer_name,
-    restaurant_id,
+    meetingPoint,
+    nParticipants,
+    organizerMail,
+    organizerName,
+    restaurantId,
     title
 }) {
     const token = window.sessionStorage.getItem('gaussAccessToken');
     const [open, setOpen] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
-    const [success, setSuccess] = React.useState(false);
+    const [registered, setRegistered] = React.useState(false);
+    const [buttonText, setButtonText] = React.useState("Register");
     const timer = React.useRef();
     const formattedDatetime = new Date(datetime);
     const today = new Date()
@@ -28,37 +29,13 @@ export default function MultiActionAreaCard({
     let daysUntil = "D-" + Math.ceil(difference / (1000 * 3600 * 24));
 
     const buttonSx = {
-        ...(success && {
+        ...(registered && {
             bgcolor: green[500],
             '&:hover': {
                 bgcolor: green[700],
             },
         }),
     };
-
-    React.useEffect(() => {
-        async function fetchData() {
-            // retrieve the first 6 appointments
-            return await axios.get(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/lunch-together/v1/registrations/'), {
-                headers: {Authorization: `Bearer ${token}`},
-                withCredentials: true,
-                params: {"appointment_id": appointment_id}
-            })
-        }
-
-        fetchData().then((res) => {
-            if (res.status === 200) {
-                setSuccess(true);
-                setLoading(false);
-            } else {
-                setSuccess(false);
-                setLoading(false);
-            }
-        });
-        return () => {
-            clearTimeout(timer.current);
-        };
-    }, [appointment_id, token]);
 
     const handleOpenModal = () => {
         setOpen(true);
@@ -68,29 +45,97 @@ export default function MultiActionAreaCard({
         setOpen(!open)
     }
 
-    const handleRegister = () => {
+    const getRegistration = () => {
+        async function fetchData() {
+            return await axios.get(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/lunch-together/v1/registrations/'), {
+                headers: {Authorization: `Bearer ${token}`},
+                withCredentials: true,
+                params: {"appointment_id": appointmentId}
+            })
+        }
+
+        fetchData().then((res) => {
+            if (res.status === 200) {
+                let mail = window.sessionStorage.getItem('mail')
+                let registrations = res.data
+                for (let i = 0; i < registrations.length; i++) {
+                    if (registrations[i]["participant_mail"] === mail) {
+                        setRegistered(true);
+                        setButtonText("Cancel")
+                        break;
+                    }
+                }
+                setLoading(false)
+            } else {
+                setRegistered(false);
+                setLoading(false);
+                setButtonText("Register")
+            }
+        });
+    }
+
+    const cancel = () => {
+        async function fetchData() {
+            return await axios.delete(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/lunch-together/v1/registrations/'), {
+                headers: {Authorization: `Bearer ${token}`},
+                withCredentials: true,
+                params: {"appointment_id": appointmentId}
+            })
+        }
+
+        fetchData().then((res) => {
+            if (res.status === 200) {
+                setRegistered(false);
+                setLoading(false);
+                setButtonText("Register")
+            } else {
+                setRegistered(true);
+                setLoading(false);
+                setButtonText("Cancel")
+            }
+        });
+    }
+
+    const register = () => {
+        async function fetchData() {
+            return await axios.put(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/lunch-together/v1/registrations/'), {}, {
+                headers: {Authorization: `Bearer ${token}`},
+                withCredentials: true,
+                params: {"appointment_id": appointmentId}
+            })
+        }
+
+        fetchData().then((res) => {
+            if (res.status === 201) {
+                setRegistered(true);
+                setLoading(false);
+                setButtonText("Cancel")
+            } else {
+                setRegistered(false);
+                setLoading(false);
+                setButtonText("Register")
+            }
+        });
+    }
+
+
+    React.useEffect(() => {
+        getRegistration();
+        return () => {
+            clearTimeout(timer.current);
+        };
+    }, [appointmentId, token]);
+
+    const handleButtonClick = () => {
         if (!loading) {
-            setSuccess(false);
             setLoading(true);
             timer.current = window.setTimeout(() => {
-                async function fetchData() {
-                    // retrieve the first 6 appointments
-                    return await axios.put(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/lunch-together/v1/registrations/'), {}, {
-                        headers: {Authorization: `Bearer ${token}`},
-                        withCredentials: true,
-                        params: {"appointment_id": appointment_id}
-                    })
+                if (registered) {
+                    cancel();
                 }
-
-                fetchData().then((res) => {
-                    if (res.status === 200) {
-                        setSuccess(true);
-                        setLoading(false);
-                    } else {
-                        setSuccess(false);
-                        setLoading(false);
-                    }
-                });
+                else {
+                    register();
+                }
 
             }, 2000);
         }
@@ -113,13 +158,13 @@ export default function MultiActionAreaCard({
                         </div>
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        <span className={"date"}>{datetime}</span>
+                        <span className={"date"}>{formattedDatetime.toLocaleString()}</span>
                         <br/>
-                        <span className={"planner"}>Organizer: {organizer_name}</span>
+                        <span className={"planner"}>Organizer: {organizerName}</span>
                         <br/>
-                        <span className={"current-count"}>Participants: {n_participants}/10</span>
+                        <span className={"current-count"}>Participants: {nParticipants}/10</span>
                         <br/>
-                        <span className={"meeting-place"}>Meeting point: {meeting_point}</span>
+                        <span className={"meeting-place"}>Meeting point: {meetingPoint}</span>
                         <br/>
                     </Typography>
                 </CardContent>
@@ -129,14 +174,17 @@ export default function MultiActionAreaCard({
                 <Button size="small" color="primary" onClick={handleOpenModal}>
                     Details
                 </Button>
-                <LunchTogetherModal isOpen={open} handleClick={handleClick}></LunchTogetherModal>
+                <LunchTogetherModal isOpen={open} handleClick={handleClick} appointmentId={appointmentId} datetime={formattedDatetime.toLocaleString()} meetingPoint={meetingPoint}
+                                    nParticipants={nParticipants} organizerMail={organizerMail}
+                                    organizerName={organizerName} restaurantId={restaurantId}
+                                    title={title}></LunchTogetherModal>
                 <Button
                     variant="contained"
                     sx={buttonSx}
                     disabled={loading}
-                    onClick={handleRegister}
+                    onClick={handleButtonClick}
                 >
-                    Register
+                    {buttonText}
                     {loading && (
                         <CircularProgress
                             size={24}
