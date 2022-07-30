@@ -24,6 +24,16 @@ const GausselinReviewPage = ({ offset, limit }) => {
     });
   };
 
+  const DeleteButton = ({reviewerMail, reviewId}) => {
+    const userMail = window.sessionStorage.getItem('mail');
+    console.log(userMail, reviewerMail)
+    if(userMail === reviewerMail) {
+      return <Button variant='contained' color='error' onClick={() => deleteReview(reviewId)}>Delete</Button>;
+    } else {
+      return null;
+    }
+  };
+
   // Get reviews.
   useEffect(() => {
     setReviewPapers('Loading...');
@@ -84,7 +94,7 @@ const GausselinReviewPage = ({ offset, limit }) => {
                 </tbody>
               </table>
             </Paper>
-            <Button variant='contained' color='error' onClick={() => deleteReview(review.id)}>Delete</Button>
+            <DeleteButton reviewerMail={review.user_mail} reviewId={review.id} />
           </div>
         );
       });
