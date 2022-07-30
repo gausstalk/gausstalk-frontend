@@ -1,9 +1,10 @@
 import MultiActionAreaCard from '../components/lunch-together-card.js'
 import React, {useEffect} from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import urlJoin from "url-join";
-import {CircularProgress} from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
 import CustomNavbar from "../components/custom-nav-bar";
 import '../assets/styles/lunch-together-view.css'
 
@@ -12,6 +13,7 @@ export default function LunchTogetherView() {
     const [loading, setLoading] = React.useState(false);
     const [items, setItems] = React.useState([]);
     const [hasNextPage, setHasNextPage] = React.useState(true);
+    const navigate = useNavigate();
 
     function loadItems(startCursor = 0): Promise<Response> {
         return new Promise((resolve) => {
@@ -105,6 +107,7 @@ export default function LunchTogetherView() {
         <>
             <CustomNavbar/>
             <section className={"upcoming-gatherings section"}>
+                <Button variant='contained' onClick={() => { navigate('./form') }}>Create Appointment</Button>
                 <div className={"gathering-cards-container"} ref={rootRef}>
                     {items.map((card) => (
                         <MultiActionAreaCard key={card.id} appointmentId={card.id} datetime={card.datetime} meetingPoint={card.meeting_point}

@@ -18,3 +18,8 @@ section {
 .infinite-scroll {
     display: block;
 }
+
+.upcoming-gatherings {
+    display: flex;
+    flex-direction: column;
+}
