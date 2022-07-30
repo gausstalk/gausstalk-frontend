@@ -1,4 +1,4 @@
-.gausselin-paper {
+.gausselin-review-div {
   width: 25em;
   max-width: 90%;
   display: inline-block;
@@ -7,6 +7,14 @@
   flex-wrap: wrap;
   align-content: center;
   justify-content: center;
+}
+
+.gausselin-review-div>button {
+  margin: 0.5em 0.2em 0 auto;
+}
+
+.gausselin-paper {
+  width: 100%;
 }
 
 .gausselin-paper>table {
@@ -39,7 +47,7 @@
   padding-top: 1.2em;
 }
 
-#gausselin-root .gausselin-paper+.gausselin-paper {
+#gausselin-root .gausselin-review-div+.gausselin-review-div {
   margin-top: 1.5em;
 }
 
