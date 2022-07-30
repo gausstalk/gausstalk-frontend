@@ -12,7 +12,7 @@ export default function MultiActionAreaCard({
     appointmentId,
     datetime,
     meetingPoint,
-    nParticipants,
+    maxParticipants,
     organizerMail,
     organizerName,
     restaurantId,
@@ -23,6 +23,7 @@ export default function MultiActionAreaCard({
     const [loading, setLoading] = React.useState(false);
     const [registered, setRegistered] = React.useState(false);
     const [buttonText, setButtonText] = React.useState("Register");
+    const [participants, setParticipants] = React.useState([]);
     const timer = React.useRef();
     const formattedDatetime = new Date(datetime);
     const today = new Date()
@@ -45,35 +46,6 @@ export default function MultiActionAreaCard({
 
     const handleClick = () => {
         setOpen(!open)
-    }
-
-    const getRegistration = () => {
-        async function fetchData() {
-            return await axios.get(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/lunch-together/v1/registrations/'), {
-                headers: {Authorization: `Bearer ${token}`},
-                withCredentials: true,
-                params: {"appointment_id": appointmentId}
-            })
-        }
-
-        fetchData().then((res) => {
-            if (res.status === 200) {
-                let mail = window.sessionStorage.getItem('mail')
-                let registrations = res.data
-                for (let i = 0; i < registrations.length; i++) {
-                    if (registrations[i]["participant_mail"] === mail) {
-                        setRegistered(true);
-                        setButtonText("Cancel")
-                        break;
-                    }
-                }
-                setLoading(false)
-            } else {
-                setRegistered(false);
-                setLoading(false);
-                setButtonText("Register")
-            }
-        });
     }
 
     const cancel = () => {
@@ -144,11 +116,46 @@ export default function MultiActionAreaCard({
     };
 
     React.useEffect(() => {
+        const getRegistration = () => {
+            async function fetchData() {
+                return await axios.get(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/lunch-together/v1/registrations/'), {
+                    headers: {Authorization: `Bearer ${token}`},
+                    withCredentials: true,
+                    params: {"appointment_id": appointmentId}
+                })
+            }
+
+            fetchData().then((res) => {
+                if (res.status === 200) {
+                    let mail = window.sessionStorage.getItem('mail')
+                    let registrations = res.data
+                    for (let i = 0; i < registrations.length; i++) {
+                        if (registrations[i]["participant_mail"] === mail) {
+                            setRegistered(true);
+                            setButtonText("Cancel")
+                            break;
+                        }
+                    }
+                    setLoading(false)
+                } else {
+                    setRegistered(false);
+                    setLoading(false);
+                    setButtonText("Register")
+                }
+
+                // Refresh the number of participants.
+                let tmp_participants = [];
+                for(const registration of res.data) {
+                  tmp_participants.push(registration.participant_name);
+                }
+                setParticipants(tmp_participants);
+            });
+        };
         getRegistration();
         return () => {
             clearTimeout(timer.current);
         };
-    }, [appointmentId, token]);
+    }, [appointmentId, token, registered]);
 
     const handleButtonClick = () => {
         if (!loading) {
@@ -186,7 +193,7 @@ export default function MultiActionAreaCard({
                         <br/>
                         <span className={"planner"}>Organizer: {organizerName}</span>
                         <br/>
-                        <span className={"current-count"}>Participants: {nParticipants}/10</span>
+                        <span className={"current-count"}>Participants: {participants.length}/{maxParticipants}</span>
                         <br/>
                         <span className={"meeting-place"}>Meeting point: {meetingPoint}</span>
                         <br/>
@@ -199,7 +206,7 @@ export default function MultiActionAreaCard({
                     Details
                 </Button>
                 <LunchTogetherModal isOpen={open} handleClick={handleClick} appointmentId={appointmentId} datetime={formattedDatetime.toLocaleString()} meetingPoint={meetingPoint}
-                                    nParticipants={nParticipants} organizerMail={organizerMail}
+                                    maxParticipants={maxParticipants} participants={participants} organizerMail={organizerMail}
                                     organizerName={organizerName} restaurantId={restaurantId}
                                     title={title}></LunchTogetherModal>
                 <Button
