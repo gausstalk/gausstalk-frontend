@@ -6,6 +6,7 @@ import LunchTogetherModal from './lunch-together-modal.js'
 import '../assets/styles/lunch-together-card.css'
 import axios from "axios";
 import urlJoin from "url-join";
+import { useNavigate } from 'react-router-dom';
 
 export default function MultiActionAreaCard({
     appointmentId,
@@ -25,6 +26,7 @@ export default function MultiActionAreaCard({
     const timer = React.useRef();
     const formattedDatetime = new Date(datetime);
     const today = new Date()
+    const navigate = useNavigate();
     let difference = formattedDatetime.getTime() - today.getTime();
     let daysUntil = "D-" + Math.ceil(difference / (1000 * 3600 * 24));
 
@@ -118,6 +120,28 @@ export default function MultiActionAreaCard({
         });
     }
 
+    const deleteAppointment = () => {
+      axios.delete(
+        urlJoin(
+          process.env.REACT_APP_BACKEND_BASE_URL,
+          `apps/lunch-together/v1/appointments/${appointmentId}`,
+        ), {
+          headers: {Authorization: `Bearer ${token}`},
+          withCredentials: true,
+        },
+      ).then(() => {
+        window.location.reload();
+      });
+    };
+
+    const DeleteButton = () => {
+      const userMail = window.sessionStorage.getItem('mail');
+      if(userMail === organizerMail) {
+        return <Button variant="contained" color='error' onClick={deleteAppointment}>Delete</Button>;
+      } else {
+        return null;
+      }
+    };
 
     React.useEffect(() => {
         getRegistration();
@@ -202,6 +226,7 @@ export default function MultiActionAreaCard({
                 </div>
 
             </CardActions>
+            <DeleteButton />
         </Card>
     );
 }
