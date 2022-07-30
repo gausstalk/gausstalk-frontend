@@ -183,7 +183,7 @@ export default function MultiActionAreaCard({
                     Details
                 </Button>
                 <LunchTogetherModal isOpen={open} handleClick={handleClick} appointmentId={appointmentId} datetime={formattedDatetime.toLocaleString()} meetingPoint={meetingPoint}
-                                    maxParticipants={maxParticipants} organizerMail={organizerMail}
+                                    maxParticipants={maxParticipants} participants={participants} organizerMail={organizerMail}
                                     organizerName={organizerName} restaurantId={restaurantId}
                                     title={title}></LunchTogetherModal>
                 <Button
