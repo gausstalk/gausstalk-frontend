@@ -2,7 +2,7 @@ import * as React from 'react';
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@mui/material'
 
 export default function LunchTogetherModal({isOpen, handleClick, appointmentId, title, nParticipants, organizerMail, organizerName, datetime, meetingPoint, restaurantId}) {
-    const [scroll, setScroll] = React.useState('paper');
+    const [scroll] = React.useState('paper');
 
     const descriptionElementRef = React.useRef(null);
     React.useEffect(() => {
