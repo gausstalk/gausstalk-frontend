@@ -11,7 +11,7 @@ export default function MultiActionAreaCard({
     appointmentId,
     datetime,
     meetingPoint,
-    nParticipants,
+    maxParticipants,
     organizerMail,
     organizerName,
     restaurantId,
@@ -22,6 +22,7 @@ export default function MultiActionAreaCard({
     const [loading, setLoading] = React.useState(false);
     const [registered, setRegistered] = React.useState(false);
     const [buttonText, setButtonText] = React.useState("Register");
+    const [participants, setParticipants] = React.useState([]);
     const timer = React.useRef();
     const formattedDatetime = new Date(datetime);
     const today = new Date()
@@ -89,7 +90,6 @@ export default function MultiActionAreaCard({
         });
     }
 
-
     React.useEffect(() => {
         const getRegistration = () => {
             async function fetchData() {
@@ -117,13 +117,20 @@ export default function MultiActionAreaCard({
                     setLoading(false);
                     setButtonText("Register")
                 }
+
+                // Refresh the number of participants.
+                let tmp_participants = [];
+                for(const registration of res.data) {
+                  tmp_participants.push(registration.participant_name);
+                }
+                setParticipants(tmp_participants);
             });
         };
         getRegistration();
         return () => {
             clearTimeout(timer.current);
         };
-    }, [appointmentId, token]);
+    }, [appointmentId, token, registered]);
 
     const handleButtonClick = () => {
         if (!loading) {
@@ -161,7 +168,7 @@ export default function MultiActionAreaCard({
                         <br/>
                         <span className={"planner"}>Organizer: {organizerName}</span>
                         <br/>
-                        <span className={"current-count"}>Participants: {nParticipants}/10</span>
+                        <span className={"current-count"}>Participants: {participants.length}/{maxParticipants}</span>
                         <br/>
                         <span className={"meeting-place"}>Meeting point: {meetingPoint}</span>
                         <br/>
@@ -174,7 +181,7 @@ export default function MultiActionAreaCard({
                     Details
                 </Button>
                 <LunchTogetherModal isOpen={open} handleClick={handleClick} appointmentId={appointmentId} datetime={formattedDatetime.toLocaleString()} meetingPoint={meetingPoint}
-                                    nParticipants={nParticipants} organizerMail={organizerMail}
+                                    maxParticipants={maxParticipants} participants={participants} organizerMail={organizerMail}
                                     organizerName={organizerName} restaurantId={restaurantId}
                                     title={title}></LunchTogetherModal>
                 <Button

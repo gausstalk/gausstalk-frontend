@@ -31,14 +31,14 @@ const LunchTogetherForm = () => {
     let restaurantId = Number(event.target.restaurantId.value);
     let title = event.target.title.value;
     let datetime = event.target.datetime.value;
-    let nParticipants = Number(event.target.nParticipants.value);
+    let maxParticipants = Number(event.target.maxParticipants.value);
     let meetingPoint = event.target.meetingPoint.value;
 
     axios.post(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/lunch-together/v1/appointments/'), {
       restaurant_id: restaurantId,
       title: title,
       datetime: datetime,
-      n_participants: nParticipants,
+      max_participants: maxParticipants,
       meeting_point: meetingPoint,
     }, {
       headers: { Authorization: `Bearer ${window.sessionStorage.getItem('gaussAccessToken')}` },
@@ -71,7 +71,7 @@ const LunchTogetherForm = () => {
                 </tr>
                 <tr>
                   <td># Participants</td>
-                  <td><Input type="number" name="nParticipants" defaultValue="2" min="2" required /></td>
+                  <td><Input type="number" name="maxParticipants" defaultValue="2" min="2" required /></td>
                 </tr>
                 <tr>
                   <td>Meeting Point</td>
