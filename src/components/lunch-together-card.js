@@ -46,42 +46,6 @@ export default function MultiActionAreaCard({
         setOpen(!open)
     }
 
-    const getRegistration = () => {
-        async function fetchData() {
-            return await axios.get(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/lunch-together/v1/registrations/'), {
-                headers: {Authorization: `Bearer ${token}`},
-                withCredentials: true,
-                params: {"appointment_id": appointmentId}
-            })
-        }
-
-        fetchData().then((res) => {
-            if (res.status === 200) {
-                let mail = window.sessionStorage.getItem('mail')
-                let registrations = res.data
-                for (let i = 0; i < registrations.length; i++) {
-                    if (registrations[i]["participant_mail"] === mail) {
-                        setRegistered(true);
-                        setButtonText("Cancel")
-                        break;
-                    }
-                }
-                setLoading(false)
-            } else {
-                setRegistered(false);
-                setLoading(false);
-                setButtonText("Register")
-            }
-
-            // Refresh the number of participants.
-            let tmp_participants = [];
-            for(const registration of res.data) {
-              tmp_participants.push(registration.participant_name);
-            }
-            setParticipants(tmp_participants);
-        });
-    }
-
     const cancel = () => {
         async function fetchData() {
             return await axios.delete(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/lunch-together/v1/registrations/'), {
@@ -126,8 +90,42 @@ export default function MultiActionAreaCard({
         });
     }
 
-
     React.useEffect(() => {
+        const getRegistration = () => {
+            async function fetchData() {
+                return await axios.get(urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/lunch-together/v1/registrations/'), {
+                    headers: {Authorization: `Bearer ${token}`},
+                    withCredentials: true,
+                    params: {"appointment_id": appointmentId}
+                })
+            }
+
+            fetchData().then((res) => {
+                if (res.status === 200) {
+                    let mail = window.sessionStorage.getItem('mail')
+                    let registrations = res.data
+                    for (let i = 0; i < registrations.length; i++) {
+                        if (registrations[i]["participant_mail"] === mail) {
+                            setRegistered(true);
+                            setButtonText("Cancel")
+                            break;
+                        }
+                    }
+                    setLoading(false)
+                } else {
+                    setRegistered(false);
+                    setLoading(false);
+                    setButtonText("Register")
+                }
+
+                // Refresh the number of participants.
+                let tmp_participants = [];
+                for(const registration of res.data) {
+                  tmp_participants.push(registration.participant_name);
+                }
+                setParticipants(tmp_participants);
+            });
+        };
         getRegistration();
         return () => {
             clearTimeout(timer.current);
