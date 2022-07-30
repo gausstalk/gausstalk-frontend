@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import urlJoin from 'url-join';
-import { Paper } from '@mui/material';
+import { Button, Paper } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import '../assets/styles/gausselin.css';
@@ -12,6 +12,17 @@ const GausselinReviewPage = ({ offset, limit }) => {
   const [reviewPapers, setReviewPapers] = useState();
   const token = window.sessionStorage.getItem('gaussAccessToken');
   const reviewsUrl = urlJoin(process.env.REACT_APP_BACKEND_BASE_URL, 'apps/gausselin/v1/reviews/');
+
+  const deleteReview = (reviewId) => {
+    axios.delete(urlJoin(reviewsUrl, reviewId), {
+      headers: { Authorization: `Bearer ${token}` },
+      withCredentials: true,
+    }).then(() => {
+      window.location.reload();
+    }).catch((error) => {
+      console.log(error);
+    });
+  };
 
   // Get reviews.
   useEffect(() => {
@@ -44,34 +55,37 @@ const GausselinReviewPage = ({ offset, limit }) => {
         }
 
         tempReviewPapers.push(
-          <Paper elevation={3} className='gausselin-paper' key={review.id}>
-            <table>
-              <tbody>
-                <tr>
-                  <td>Restaurant</td>
-                  <td><a href={`https://place.map.kakao.com/${review.restaurant_id}`}>
-                    {review.restaurant_name}
-                  </a></td>
-                </tr>
-                <tr>
-                  <td>Reviewer</td>
-                  <td>{review.user_name}</td>
-                </tr>
-                <tr>
-                  <td>Stars</td>
-                  <td>{starIcons}</td>
-                </tr>
-                <tr>
-                  <td>Date</td>
-                  <td>{new Date(review.created_datetime).toDateString()}</td>
-                </tr>
-                <tr>
-                  <td>Comment</td>
-                  <td>{review.comment}</td>
-                </tr>
-              </tbody>
-            </table>
-          </Paper>
+          <div className='gausselin-review-div' key={review.id}>
+            <Paper elevation={3} className='gausselin-paper'>
+              <table>
+                <tbody>
+                  <tr>
+                    <td>Restaurant</td>
+                    <td><a href={`https://place.map.kakao.com/${review.restaurant_id}`}>
+                      {review.restaurant_name}
+                    </a></td>
+                  </tr>
+                  <tr>
+                    <td>Reviewer</td>
+                    <td>{review.user_name}</td>
+                  </tr>
+                  <tr>
+                    <td>Stars</td>
+                    <td>{starIcons}</td>
+                  </tr>
+                  <tr>
+                    <td>Date</td>
+                    <td>{new Date(review.created_datetime).toDateString()}</td>
+                  </tr>
+                  <tr>
+                    <td>Comment</td>
+                    <td>{review.comment}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </Paper>
+            <Button variant='contained' color='error' onClick={() => deleteReview(review.id)}>Delete</Button>
+          </div>
         );
       });
 
