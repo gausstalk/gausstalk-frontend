@@ -113,7 +113,7 @@ function OneOnOne() {
                             <h1 className={"section-h1"}>1:1</h1>
                             <p id='one-on-one-first-line'>Every end of the day,</p>
                             <p id='one-on-one-second-line'>random 1:1’s are matched and sent to you via email!</p>
-                            <p id='one-on-one-third-line'>(All 1:1 are matched at 9:00AM KST)</p>
+                            <p id='one-on-one-third-line'>(All 1:1 are matched at 12:00 AM KST)</p>
                             <MyButton/>
                         </div>
                         <div className={"countdown-container"}>
