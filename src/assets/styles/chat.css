@@ -109,6 +109,12 @@ div.chat-bubble-me {
     opacity: 70%;
 }
 
+/* https://www.flaticon.com/kr/free-icons/gif- */
+.gif-image {
+    width: 40px;
+    height: 100%;
+}
+
 #company-name {
     font-size: 0.75em;
     margin-left: 1em;
@@ -118,4 +124,12 @@ div.chat-bubble-me {
     border-radius: 20px !important;
     height: 45px;
     box-shadow: none !important;
+}
+
+#gif-search-button {
+    position: absolute;
+    height: 100%;
+    right: 7.5em;
+    display: flex;
+    align-items: center;
 }
